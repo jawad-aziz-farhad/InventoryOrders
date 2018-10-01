@@ -114,7 +114,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
             public void onClick(View view) {
                 viewHolder.removeFromCartLayout.setVisibility(View.VISIBLE);
                 viewHolder.addToCartLayout.setVisibility(View.GONE);
-                viewHolder.quantityBtn.setEnabled(false);
+                viewHolder.quantityBtn.setVisibility(View.GONE);
                 product.setTotalProductPrice(viewHolder.productTotalPrice.getText().toString());
                 listener.OnAddToCartClick(product);
             }
@@ -125,7 +125,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
             public void onClick(View view) {
                 viewHolder.removeFromCartLayout.setVisibility(View.GONE);
                 viewHolder.addToCartLayout.setVisibility(View.VISIBLE);
-                viewHolder.quantityBtn.setEnabled(true);
+                viewHolder.quantityBtn.setVisibility(View.VISIBLE);
                 listener.OnRemoveFromCartClick(product);
             }
         });
