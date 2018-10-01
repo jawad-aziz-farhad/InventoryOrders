@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.imFarhad.inventoryorders.R;
 import com.imFarhad.inventoryorders.interfaces.ProductItemClickListener;
@@ -50,7 +52,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
         private ElegantNumberButton quantityBtn;
         private LinearLayout addToCartLayout, removeFromCartLayout;
 
-        private static final String TAG = ProductsAdapter.class.getSimpleName();
+        public static final String TAG = ProductsAdapter.class.getSimpleName();
 
         public ViewHolder(final View itemView) {
             super(itemView);
@@ -112,41 +114,50 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
         viewHolder.addtoCartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewHolder.removeFromCartLayout.setVisibility(View.VISIBLE);
-                viewHolder.addToCartLayout.setVisibility(View.GONE);
-                viewHolder.quantityBtn.setEnabled(false);
-                product.setTotalProductPrice(viewHolder.productTotalPrice.getText().toString());
-                listener.OnAddToCartClick(product);
+            if(viewHolder.quantityBtn.getNumber().equals("0")){
+                Toast.makeText(mContext, mContext.getString(R.string.quantity_selection_error), Toast.LENGTH_LONG).show();
+                return;
+            }
+            viewHolder.removeFromCartLayout.setVisibility(View.VISIBLE);
+            viewHolder.addToCartLayout.setVisibility(View.GONE);
+            Product _product = getEditedProduct(
+                    product,
+                    Integer.parseInt(viewHolder.quantityBtn.getNumber()),
+                    viewHolder.productTotalPrice.getText().toString());
+            listener.OnAddToCartClick(_product);
             }
         });
 
         viewHolder.removeCartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewHolder.removeFromCartLayout.setVisibility(View.GONE);
-                viewHolder.addToCartLayout.setVisibility(View.VISIBLE);
-                viewHolder.quantityBtn.setEnabled(true);
-                listener.OnRemoveFromCartClick(product);
+            viewHolder.removeFromCartLayout.setVisibility(View.GONE);
+            viewHolder.addToCartLayout.setVisibility(View.VISIBLE);
+            viewHolder.quantityBtn.setNumber("0");
+            viewHolder.productTotalPrice.setText("0 ");
+            viewHolder.productTotalPrice.append(mContext.getString(R.string.currency));
+            listener.OnRemoveFromCartClick(product);
             }
         });
 
         viewHolder.quantityBtn.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
             @Override
             public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
-
+                String currency = " " + mContext.getString(R.string.currency);
                 String btnValue  = view.getNumber();
+
                 if(Integer.parseInt(btnValue) > 0) {
                     viewHolder.addtoCartBtn.setEnabled(true);
                     int unitPrice = getPrice(viewHolder.productUnitPrice.getText().toString());
                     int totalPrice = unitPrice * Integer.parseInt(btnValue);
-                    String currency = " " + mContext.getString(R.string.currency);
-
                     viewHolder.productTotalPrice.setText(String.valueOf(totalPrice));
                     viewHolder.productTotalPrice.append(currency);
                 }
-
-                else
+                else {
                     viewHolder.addtoCartBtn.setEnabled(false);
+                    viewHolder.productTotalPrice.setText("0");
+                    viewHolder.productTotalPrice.append(currency);
+                }
             }
         });
     }
@@ -164,6 +175,18 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
                 builder.append(currentChar);
         }
         return Integer.parseInt(builder.toString());
+    }
+
+    //TODO: EDITING PRODUCT TO ADD QUANTITY AND TOTAL PRICE FOR A SINGLE CART ITEM
+    private Product getEditedProduct(Product product, int qauntity, String totalPrice){
+        product.setCat_id(product.getCat_id());
+        product.setDescription(product.getDescription());
+        product.setImage(product.getDescription());
+        product.setId(product.getId());
+        product.setQuantity(qauntity);
+        product.setTotalProductPrice(totalPrice);
+
+        return product;
     }
 
 
