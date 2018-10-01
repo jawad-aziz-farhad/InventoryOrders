@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/notification"
+        android:gravity="center"/>
+
+    <item android:id="@+id/notificationBadge"
+        android:drawable="@drawable/notification"/>
+</layer-list>

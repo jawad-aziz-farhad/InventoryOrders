@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name">InventoryOrders</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign In</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="loader_msg">Please wait...</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="login_error">Invalid email or password.</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+    <string name="title_activity_login">Sign in</string>
+    <string name="error_message">Something went wrong.</string>
+    <string name="create_account">Create Account !!!</string>
+    <string name="reset_password_success_message">An email has been sent to your email address. please check your email.</string>
+
+    <string name="profile_name">Name</string>
+    <string name="profile_email">Email:</string>
+    <string name="profile_phone">Phone:</string>
+    <string name="profile_dob">Date of Birth:</string>
+    <string name="profile_address">Address:</string>
+
+    <string name="internet_error_msg">Sorry! Internet not available or poor internet connection.</string>
+    <string name="unread_notifications_msg">You have some unread notifications.</string>
+    <string name="no_notifications_msg">You do not have any unread notifications yet.</string>
+
+
+    <string name="retry_btn">Retry</string>
+
+    <string name="title_activity_network_error">NetworkError</string>
+    <string name="title_activity_slider_menu">SliderMenu</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+    <string name="settings">Settings</string>
+    <string name="notifications">Notifications</string>
+    <string name="signout">Sign Out</string>
+    <string name="signing_off">Signing Off</string>
+
+    <string name="unit_price">Unit Price: $</string>
+    <string name="total_price">Total Price: $</string>
+    <string name="currency">PKR</string>
+
+    <string name="no_products_found">Sorry! No Products found for this Category.</string>
+    <string name="quantity_selection_error">Quanity of Product must be greater than 0</string>
+    <string name="delete">Delete</string>
+
+</resources>
