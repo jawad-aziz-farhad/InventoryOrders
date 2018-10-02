@@ -23,7 +23,8 @@
                 android:layout_height="@dimen/card_cover_height"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:scaleType="fitXY" />
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_shopping_cart"/>
 
             <TextView
                 android:id="@+id/category_title"
@@ -33,7 +34,7 @@
                 android:paddingLeft="@dimen/card_title_padding"
                 android:paddingRight="@dimen/card_title_padding"
                 android:paddingTop="@dimen/card_title_padding"
-                android:textColor="@color/title"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="@dimen/card_title" />
 
             <TextView

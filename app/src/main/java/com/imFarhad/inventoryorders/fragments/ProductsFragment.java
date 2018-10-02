@@ -74,13 +74,7 @@ public class ProductsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof Activity){
-            cartBtn = (FloatingActionButton)getActivity().findViewById(R.id.fab_cart);
-            totalItems = (TextView)getActivity().findViewById(R.id.cart_items_count);
-            RelativeLayout relativeLayout = (RelativeLayout)getActivity().findViewById(R.id.cart_wrapper_layout);
-            relativeLayout.setVisibility(View.VISIBLE);
-            cartBtn.setEnabled(false);
-        }
+        showCartButton();
     }
 
     @Nullable
@@ -108,8 +102,13 @@ public class ProductsFragment extends Fragment {
             }
         };
 
-        products  = new ArrayList<>();
-        cartItems = new ArrayList<>();
+        if (savedInstanceState == null){
+            products  = new ArrayList<>();
+            cartItems = new ArrayList<>();
+
+        }else {
+            products = savedInstanceState.getParcelableArrayList("products");
+        }
 
         recyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);
         progressDialog = new ProgressDialog(getActivity());
@@ -117,12 +116,22 @@ public class ProductsFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(getDividerItemDecoration());
+        recyclerView.addItemDecoration(AppController.getDividerItemDecoration());
         recyclerView.setAdapter(productsAdapter);
 
-        pullServerData();
+        if (savedInstanceState == null)
+            pullServerData();
+
 
         return view;
+    }
+
+
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("products", cartItems);
     }
 
     //TODO: GETTING DIVIDERITEMDECORATION OBJECT TO ADD TO RECYCLVIEW
@@ -169,11 +178,9 @@ public class ProductsFragment extends Fragment {
             if(products.length() > 0){
                 for(int i=0; i<products.length(); i++){
                     JSONObject object = products.getJSONObject(i);
-                    object.put("totalProductPrice", 0);
-                    Log.w(TAG, "PRODUCT " + object.toString());
                     Gson gson = new Gson();
                     Product product = gson.fromJson(object.toString(), Product.class);
-                    Log.w(TAG, product.getName() + " " + product.getPrice() +  " " + product.getTotalProductPrice());
+                    Log.w(TAG, product.getName() + " " + product.getPrice());
                     this.products.add(product);
                 }
             }
@@ -201,5 +208,31 @@ public class ProductsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        showCartButton();
+    }
+
+
+    //TODO: SHOWING CART FLOATING ACTIN BUTTON
+    private void showCartButton(){
+        cartBtn = (FloatingActionButton)getActivity().findViewById(R.id.fab_cart);
+        totalItems = (TextView)getActivity().findViewById(R.id.cart_items_count);
+        RelativeLayout relativeLayout = (RelativeLayout)getActivity().findViewById(R.id.cart_wrapper_layout);
+        relativeLayout.setVisibility(View.VISIBLE);
+        cartBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(cartItems.size() > 0){
+                    String catItems = new Gson().toJson(cartItems);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("cartItems",catItems);
+                    bundle.putParcelableArrayList("products", cartItems);
+                    Fragment fragment = new CartItemsFragment();
+                    fragment.setArguments(bundle);
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContent, fragment).commit();
+                }
+            }
+        });
+
     }
 }

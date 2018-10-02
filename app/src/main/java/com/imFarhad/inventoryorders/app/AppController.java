@@ -2,7 +2,11 @@ package com.imFarhad.inventoryorders.app;
 
 import android.app.Application;
 import android.app.ProgressDialog;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.InsetDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.support.v7.widget.DividerItemDecoration;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -60,5 +64,22 @@ public class AppController extends Application {
 
     public void setDrawable(LayerDrawable drawable){ drawableBadge = drawable; }
     public LayerDrawable getDrawable() { return drawableBadge; }
+
+    //TODO: GETTING DIVIDERITEMDECORATION OBJECT TO ADD TO RECYCLVIEW
+    public static DividerItemDecoration getDividerItemDecoration(){
+
+        int[] ATTRS = new int[]{android.R.attr.listDivider};
+
+        TypedArray a = mInstance.obtainStyledAttributes(ATTRS);
+        Drawable divider = a.getDrawable(0);
+        int inset = mInstance.getResources().getDimensionPixelSize(R.dimen.product_price_margin);
+        InsetDrawable insetDivider = new InsetDrawable(divider, inset, 0, inset, 0);
+        a.recycle();
+
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(mInstance, DividerItemDecoration.VERTICAL);
+        itemDecoration.setDrawable(insetDivider);
+        return itemDecoration;
+    }
+
 
 }

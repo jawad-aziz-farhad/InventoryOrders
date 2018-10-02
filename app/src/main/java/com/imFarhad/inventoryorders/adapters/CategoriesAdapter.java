@@ -4,13 +4,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.imFarhad.inventoryorders.R;
 import com.imFarhad.inventoryorders.interfaces.ItemClickListener;
@@ -46,7 +44,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         public void bind(final Category category, final ItemClickListener listener){
             categoryTitle.setText(category.getName());
             categoryProductsCount.setText(String.valueOf(100));
-            categoryImage.setImageDrawable(itemView.getContext().getResources().getDrawable(R.drawable.ic_remove_shopping_cart_black_24dp));
+            //categoryImage.setImageDrawable(itemView.getContext().getResources().getDrawable());
         }
     }
 

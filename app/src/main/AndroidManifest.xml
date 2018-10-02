@@ -27,7 +27,7 @@
 
         <activity
             android:name=".activities.LoginActivity"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name"/>
         <activity
             android:name=".activities.SliderMenu"
             android:label="@string/title_activity_slider_menu"

@@ -18,7 +18,10 @@
         android:layout_width="@dimen/thumbnail"
         android:layout_height="@dimen/thumbnail"
         android:layout_marginRight="@dimen/activity_vertical_margin"
-        android:scaleType="centerCrop" />
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_shopping_cart"
+        android:layout_centerVertical="true"/>
 
     <TextView
         android:id="@+id/productName"
@@ -28,6 +31,7 @@
         android:fontFamily="sans-serif-medium"
         android:maxLines="1"
         android:textSize="17dp"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_toRightOf="@id/productImage"
         android:layout_toEndOf="@id/productImage"
         />
@@ -75,7 +79,9 @@
         android:layout_below="@id/price_layout"
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@id/productImage"
-        android:textSize="12dp" />
+        android:layout_toEndOf="@id/productImage"
+        android:textSize="12dp"
+        android:textColor="@color/description"/>
 
     <TextView
         android:id="@+id/productPrice"
@@ -83,6 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/productImage"
+        android:layout_toEndOf="@id/productImage"
         android:textColor="@color/colorAccent"
         android:textStyle="bold" />
 
@@ -105,17 +112,17 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true">
 
-    <android.support.design.widget.FloatingActionButton
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/add_cart_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:tint="@android:color/white"
-        app:srcCompat="@drawable/ic_add_shopping_cart_black_24dp"
-        app:backgroundTint="@color/colorPrimary"
-        app:borderWidth="0dp"
-        app:elevation="6dp"
-        app:fabSize="normal"/>
+        <android.support.design.widget.FloatingActionButton
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/add_cart_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tint="@android:color/white"
+            app:srcCompat="@drawable/ic_add_shopping_cart"
+            app:backgroundTint="@color/colorPrimary"
+            app:borderWidth="0dp"
+            app:elevation="6dp"
+            app:fabSize="normal"/>
 
     </LinearLayout>
 
@@ -137,7 +144,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:tint="@android:color/white"
-            app:srcCompat="@drawable/ic_remove_shopping_cart_black_24dp"
+            app:srcCompat="@drawable/ic_remove_shopping_cart"
             app:backgroundTint="@color/colorPrimary"
             app:borderWidth="0dp"
             app:elevation="6dp"
