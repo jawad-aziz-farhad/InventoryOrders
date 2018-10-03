@@ -32,6 +32,7 @@ import com.imFarhad.inventoryorders.app.Preferences;
 import com.imFarhad.inventoryorders.app.SessionManager;
 import com.imFarhad.inventoryorders.fragments.CategoriesFragment;
 import com.imFarhad.inventoryorders.fragments.NotificationFragment;
+import com.imFarhad.inventoryorders.fragments.PaymentFragment;
 import com.imFarhad.inventoryorders.fragments.ProductsFragment;
 import com.imFarhad.inventoryorders.fragments.ProfileFragment;
 import com.imFarhad.inventoryorders.fragments.SettingsFragment;
@@ -106,6 +107,9 @@ public class SliderMenu extends AppCompatActivity {
     //TODO: CONFIGURING THE ACTION WHEN EACH DRAWER ITEM CLICKED
     public void selectDrawerItem(MenuItem menuItem) {
         switch(menuItem.getItemId()) {
+            case R.id.nav_home:
+                fragmentTransaction(new CategoriesFragment() , menuItem);
+                break;
             case R.id.nav_manage:
                 fragmentTransaction(new SettingsFragment() , menuItem);
                 break;
@@ -122,7 +126,7 @@ public class SliderMenu extends AppCompatActivity {
                 logOut(menuItem);
                 break;
             default:
-                fragmentTransaction(new ProductsFragment() , menuItem);
+                fragmentTransaction(new CategoriesFragment() , menuItem);
         }
     }
 

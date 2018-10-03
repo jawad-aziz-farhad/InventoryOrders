@@ -82,7 +82,7 @@ public class ProductsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.recycler_view, container,false);
-
+        view.findViewById(R.id.checkOutbtn).setVisibility(View.GONE);
         ProductItemClickListener listener = new ProductItemClickListener() {
             @Override
             public void OnItemClick(Product product) {
@@ -121,7 +121,6 @@ public class ProductsFragment extends Fragment {
 
         if (savedInstanceState == null)
             pullServerData();
-
 
         return view;
     }
@@ -222,10 +221,8 @@ public class ProductsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if(cartItems.size() > 0){
-                    String catItems = new Gson().toJson(cartItems);
                     Bundle bundle = new Bundle();
-                    bundle.putString("cartItems",catItems);
-                    bundle.putParcelableArrayList("products", cartItems);
+                    bundle.putParcelableArrayList("cartItems", cartItems);
                     Fragment fragment = new CartItemsFragment();
                     fragment.setArguments(bundle);
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();

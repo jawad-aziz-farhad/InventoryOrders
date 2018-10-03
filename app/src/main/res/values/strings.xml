@@ -31,7 +31,6 @@
     <string name="unread_notifications_msg">You have some unread notifications.</string>
     <string name="no_notifications_msg">You do not have any unread notifications yet.</string>
 
-
     <string name="retry_btn">Retry</string>
 
     <string name="title_activity_network_error">NetworkError</string>
@@ -55,6 +54,14 @@
 
     <string name="no_products_found">Sorry! No Products found for this Category.</string>
     <string name="quantity_selection_error">Quantity of Product must be greater than 0</string>
+    <string name="xxx">XXXX</string>
     <string name="delete">Delete</string>
+    <string name="submit">Submit</string>
+    <string name="cancel">Cancel</string>
+    <string name="checkoutbtn">CheckOut</string>
+
+    <string name="customer_name">Customer Name</string>
+    <string name="customer_email">Customer Email</string>
+    <string name="customer_address">Customer Address</string>
 
 </resources>

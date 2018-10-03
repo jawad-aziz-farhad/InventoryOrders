@@ -14,4 +14,15 @@
         android:clipToPadding="false"
         android:scrollbars="vertical" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkOutbtn"
+        android:text="@string/checkoutbtn"
+        android:textColor="@android:color/white"
+        android:background="@color/colorPrimaryDark"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/product_price_margin"
+        android:visibility="gone"/>
+
 </RelativeLayout>

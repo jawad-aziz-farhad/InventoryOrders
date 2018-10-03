@@ -9,11 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.imFarhad.inventoryorders.R;
 import com.imFarhad.inventoryorders.interfaces.ItemClickListener;
 import com.imFarhad.inventoryorders.models.Category;
-
 import java.util.List;
 
 /**

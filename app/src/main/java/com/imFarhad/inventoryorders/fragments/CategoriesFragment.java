@@ -21,6 +21,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.android.volley.VolleyError;
@@ -51,6 +52,7 @@ public class CategoriesFragment extends Fragment {
     private CategoriesAdapter categoriesAdapter;
     private List<Category> categories;
     private ProgressDialog progressDialog;
+    private Button checkOutBtn;
 
     private static final String TAG = CategoriesFragment.class.getSimpleName();
 
@@ -70,18 +72,19 @@ public class CategoriesFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.recycler_view, container, false);
         FloatingActionButton floatingActionButton = (FloatingActionButton)getActivity().findViewById(R.id.fab_cart);
+        view.findViewById(R.id.checkOutbtn).setVisibility(View.GONE);
         progressDialog = new ProgressDialog(getActivity());
         categories = new ArrayList<>();
 
         ItemClickListener listener = new ItemClickListener() {
             @Override
             public void onCategoryItemClickListener(Category category) {
-                Fragment fragment = new ProductsFragment();
-                Bundle bundle = new Bundle();
-                bundle.putInt("id", category.getId());
-                fragment.setArguments(bundle);
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContent, fragment).commit();
+            Fragment fragment = new ProductsFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt("id", category.getId());
+            fragment.setArguments(bundle);
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContent, fragment).commit();
             }
         };
 
