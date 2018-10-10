@@ -60,12 +60,12 @@ public class CartItemsFragment extends Fragment implements ItemTouchListener{
         checkOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList("cartItems", cartItems);
-                Fragment fragment = new PaymentFragment();
-                fragment.setArguments(bundle);
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContent, fragment).commit();
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList("cartItems", cartItems);
+            Fragment fragment = new PaymentFragment();
+            fragment.setArguments(bundle);
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContent, fragment).commit();
             }
         });
 
