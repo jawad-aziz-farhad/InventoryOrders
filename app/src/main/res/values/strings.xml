@@ -76,4 +76,8 @@
     <string name="title_activity_location_tracking">LocationTracking</string>
     <string name="title_activity_show_location">ShowLocation</string>
 
+    <string name="payment_confirmation">YES, I want to Pay this Amount</string>
+    <string name="half_amount">Half Amount</string>
+    <string name="total_amount">Total Amount</string>
+
 </resources>
