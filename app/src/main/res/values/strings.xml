@@ -61,8 +61,17 @@
     <string name="cancel">Cancel</string>
     <string name="checkoutbtn">CheckOut</string>
 
+    <string name="card_num1_error">Card Num 1 is required</string>
+    <string name="card_num2_error">Card Num 2 is required</string>
+    <string name="card_num3_error">Card Num 3 is required</string>
+    <string name="card_num4_error">Card Num 4 is required</string>
+    <string name="customer_name_error">Customer Name is required</string>
+    <string name="customer_email_error">Customer Email is required</string>
+    <string name="customer_address_error">Customer Address is required</string>
+
     <string name="customer_name">Customer Name</string>
     <string name="customer_email">Customer Email</string>
     <string name="customer_address">Customer Address</string>
+    <string name="google_api_key">AIzaSyDvngnN4kn5oYvuEy-BY-aPfs8YO3wxE88</string>
 
 </resources>

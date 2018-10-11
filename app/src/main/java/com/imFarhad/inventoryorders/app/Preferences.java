@@ -47,19 +47,19 @@ public class Preferences {
         sharedPreferences = mContext.getSharedPreferences(NOTIF_PREF,PRIVATE_MODE);
         return sharedPreferences.getInt(COUNT_KEY, 0);
     }
-
-    //TODO: SETTING NOTIFICATION SETTINGS
-    public void setNotificatinsSettings(boolean status){
-        editor = sharedPreferences.edit();
-        editor.putBoolean(NOTIFICATIONS_SETTINGS, status);
-        editor.apply();
-    }
-
-    //TODO: GETTING NOTIFICATIONS SETTINGS
-    public boolean getNotificationsSettings(){
-        sharedPreferences = mContext.getSharedPreferences(NOTIF_PREF, PRIVATE_MODE);
-        return sharedPreferences.getBoolean(NOTIFICATIONS_SETTINGS, true);
-    }
+//
+//    //TODO: SETTING NOTIFICATION SETTINGS
+//    public void setNotificatinsSettings(boolean status){
+//        editor = sharedPreferences.edit();
+//        editor.putBoolean(NOTIFICATIONS_SETTINGS, status);
+//        editor.apply();
+//    }
+//
+//    //TODO: GETTING NOTIFICATIONS SETTINGS
+//    public boolean getNotificationsSettings(){
+//        sharedPreferences = mContext.getSharedPreferences(NOTIF_PREF, PRIVATE_MODE);
+//        return sharedPreferences.getBoolean(NOTIFICATIONS_SETTINGS, true);
+//    }
 
     //TODO: GETTING FCM TOKEN
     public String getFCMToken(){
@@ -67,15 +67,15 @@ public class Preferences {
         return fcmPreferences.getString(TOKEN, null);
     }
 
-    //TODO: REMOVING NOTIFICATION
-    public void clearNotifications(){
-        editor = sharedPreferences.edit();
-        editor.remove(COUNT_KEY).apply();
-    }
-
-    //TODO: REMOVING FCM TOKEN PREFERNCES
-    public void clearFCMPrefernces(){
-        fcmEditor = fcmPreferences.edit();
-        fcmEditor.remove(TOKEN).apply();
-    }
+//    //TODO: REMOVING NOTIFICATION
+//    public void clearNotifications(){
+//        editor = sharedPreferences.edit();
+//        editor.remove(COUNT_KEY).apply();
+//    }
+//
+//    //TODO: REMOVING FCM TOKEN PREFERNCES
+//    public void clearFCMPrefernces(){
+//        fcmEditor = fcmPreferences.edit();
+//        fcmEditor.remove(TOKEN).apply();
+//    }
 }

@@ -26,6 +26,7 @@ public class SessionManager {
     private static final String TOKEN = "token";
     public static final String NAME  = "name";
     public static final String EMAIL = "email";
+    public static final String  ID = "";
     public static final String ADDRESS = "address";
     public static final String PROFILE_IMAGE = "profile_image";
 
@@ -42,6 +43,7 @@ public class SessionManager {
             editor.putString(NAME, name);
             editor.putString(EMAIL, user.getString("email"));
             editor.putBoolean(IS_LOGGED_IN_KEY, true);
+            editor.putInt(ID , user.getInt("id"));
             //editor.putString(ADDRESS, user.getString("address"));
             //editor.putString(PROFILE_IMAGE, user.getString("address"));
 
@@ -67,6 +69,8 @@ public class SessionManager {
     public String getName(){ return sharedPreferences.getString(NAME,null);}
     //TODO: GETTING EMAIL
     public String getEmail(){ return sharedPreferences.getString(EMAIL,null);}
+    //TODO: GETTING ID
+    public int getId(){ return sharedPreferences.getInt(ID,0);}
 
 
     //TODO: CLEARING PREFERENCES

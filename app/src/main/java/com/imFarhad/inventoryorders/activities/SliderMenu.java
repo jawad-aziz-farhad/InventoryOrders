@@ -193,40 +193,9 @@ public class SliderMenu extends AppCompatActivity {
         // Close the navigation drawer
         drawer.closeDrawers();
 
-        if(!Connectivity.isConnected(SliderMenu.this) && (!Connectivity.isConnectedMobile(SliderMenu.this) || !Connectivity.isConnectedWifi(SliderMenu.this))){
-            Toast.makeText(SliderMenu.this, getString(R.string.internet_error_msg), Toast.LENGTH_LONG).show();
-            return;
-        }
+        new SessionManager(this).clearLogin();
+        startActivity(new Intent(this, LoginActivity.class));
 
-        //CALLBACK FOR LOGOUT RESPONSE
-        iResult = new IResult() {
-            @Override
-            public void onSuccess(String requestType, JSONObject response) {
-                Log.w(TAG, "LOG OUT RESPONSE "+ response);
-                try {
-                    if(response.getInt("success") == 1){
-                        sessionManager.clearLogin();
-                        startActivity(new Intent(SliderMenu.this, LoginActivity.class));
-                        finish();
-                    }
-                    else
-                        showToast(getString(R.string.error_message));
-
-                }
-                catch (JSONException e){
-                    e.printStackTrace();
-                    Log.e(TAG, "SIGN OUT EXCEPTION "+ e.getMessage());
-                }
-            }
-
-            @Override
-            public void onError(String requestType, VolleyError error) {
-                Log.e(TAG, "LOG OUT ERROR " + error);
-                showToast(getString(R.string.error_message));
-            }
-        };
-
-        //callVolleyService(AppConfig.SIGN_OUT_URL, "POST" , null);
     }
 
 
