@@ -103,10 +103,12 @@ public class ProductsFragment extends Fragment {
         };
 
         if (savedInstanceState == null){
+            Log.w(TAG, "No Value in SavedInstance State.");
             products  = new ArrayList<>();
             cartItems = new ArrayList<>();
 
         }else {
+            Log.e(TAG, savedInstanceState.toString());
             products = savedInstanceState.getParcelableArrayList("products");
         }
 
@@ -125,29 +127,20 @@ public class ProductsFragment extends Fragment {
         return view;
     }
 
-
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("products", cartItems);
+        Log.w(TAG, "Saving Products.");
+        outState.putParcelableArrayList("products", products);
     }
 
-    //TODO: GETTING DIVIDERITEMDECORATION OBJECT TO ADD TO RECYCLVIEW
-    private DividerItemDecoration getDividerItemDecoration(){
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
 
-        int[] ATTRS = new int[]{android.R.attr.listDivider};
-
-        TypedArray a = getActivity().obtainStyledAttributes(ATTRS);
-        Drawable divider = a.getDrawable(0);
-        int inset = getResources().getDimensionPixelSize(R.dimen.product_price_margin);
-        InsetDrawable insetDivider = new InsetDrawable(divider, inset, 0, inset, 0);
-        a.recycle();
-
-        DividerItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
-        itemDecoration.setDrawable(insetDivider);
-        return itemDecoration;
     }
+
+
     //TODO: PULLING PRODUCTS FROM SERVER
     private void pullServerData(){
         showDialog();
@@ -208,8 +201,13 @@ public class ProductsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         showCartButton();
+
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 
     //TODO: SHOWING CART FLOATING ACTIN BUTTON
     private void showCartButton(){
@@ -220,14 +218,14 @@ public class ProductsFragment extends Fragment {
         cartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(cartItems.size() > 0){
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelableArrayList("cartItems", cartItems);
-                    Fragment fragment = new CartItemsFragment();
-                    fragment.setArguments(bundle);
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContent, fragment).commit();
-                }
+            if(cartItems.size() > 0){
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("cartItems", cartItems);
+                Fragment fragment = new CartItemsFragment();
+                fragment.setArguments(bundle);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContent, fragment).commit();
+            }
             }
         });
 

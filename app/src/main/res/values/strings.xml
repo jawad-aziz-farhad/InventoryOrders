@@ -44,6 +44,7 @@
     <string name="home">Home</string>
     <string name="profile">Profile</string>
     <string name="settings">Settings</string>
+    <string name="orders">Orders</string>
     <string name="notifications">Notifications</string>
     <string name="signout">Sign Out</string>
     <string name="signing_off">Signing Off</string>
