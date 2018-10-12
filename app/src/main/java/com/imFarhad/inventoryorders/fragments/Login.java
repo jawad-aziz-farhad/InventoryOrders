@@ -102,7 +102,7 @@ public class Login extends Fragment {
 
     //TODO: LOGGIN IN TO THE APP
     public void login() {
-
+        showDialog();
         Map<String, String> params = new HashMap<String, String>();
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
@@ -162,6 +162,7 @@ public class Login extends Fragment {
 
     //TODO: SHOWING PROGRESS DIALOG
     private void showDialog() {
+        progressDialog.setMessage(getString(R.string.loader_msg));
         if (!progressDialog.isShowing())
             progressDialog.show();
     }

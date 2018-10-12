@@ -28,6 +28,7 @@ import com.imFarhad.inventoryorders.adapters.ProductsAdapter;
 import com.imFarhad.inventoryorders.app.AppConfig;
 import com.imFarhad.inventoryorders.app.AppController;
 import com.imFarhad.inventoryorders.app.RecyclerItemTouchListener;
+import com.imFarhad.inventoryorders.app.StripePayment;
 import com.imFarhad.inventoryorders.interfaces.ItemTouchListener;
 import com.imFarhad.inventoryorders.interfaces.ProductItemClickListener;
 import com.imFarhad.inventoryorders.models.Product;
@@ -63,12 +64,15 @@ public class CartItemsFragment extends Fragment implements ItemTouchListener{
         checkOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList("cartItems", cartItems);
-                Fragment fragment = new PaymentFragment();
-                fragment.setArguments(bundle);
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContent, fragment).commit();
+//                Bundle bundle = new Bundle();
+//                bundle.putParcelableArrayList("cartItems", cartItems);
+//                Fragment fragment = new PaymentFragment();
+//                fragment.setArguments(bundle);
+//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContent, fragment).commit();
+
+                StripePayment stripePayment = new StripePayment(getActivity());
+                stripePayment.OpenDialog();
             }
         });
 

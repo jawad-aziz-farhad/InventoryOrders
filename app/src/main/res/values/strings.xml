@@ -15,6 +15,10 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="wrond_card_number">Card number is incorrect.</string>
+    <string name="wrond_card_cvv">Card CVV is incorrect.</string>
+    <string name="wrond_card_expiry_month">Card expiry month is incorrect.</string>
+    <string name="wrond_card_expiry_year">Card expiry year is incorrect.</string>
 
     <string name="title_activity_login">Sign in</string>
     <string name="error_message">Something went wrong.</string>

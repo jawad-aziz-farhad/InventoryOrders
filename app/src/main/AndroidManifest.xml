@@ -19,7 +19,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.Splash"></activity>
+        <activity android:name=".activities.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/app_name" />
@@ -27,6 +34,7 @@
             android:name=".activities.SliderMenu"
             android:label="@string/title_activity_slider_menu"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".activities.NetworkErrorActivity" />
         <activity android:name=".activities.ProductDetails" />
 
@@ -47,13 +55,6 @@
             android:name=".activities.ShowLocation"
             android:label="@string/title_activity_show_location"
             android:theme="@style/AppTheme.NoActionBar">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
         </activity>
     </application>
 
