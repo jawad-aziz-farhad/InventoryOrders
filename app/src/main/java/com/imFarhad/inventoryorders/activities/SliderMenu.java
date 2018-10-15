@@ -32,6 +32,7 @@ import com.imFarhad.inventoryorders.app.Preferences;
 import com.imFarhad.inventoryorders.app.SessionManager;
 import com.imFarhad.inventoryorders.fragments.CategoriesFragment;
 import com.imFarhad.inventoryorders.fragments.NotificationFragment;
+import com.imFarhad.inventoryorders.fragments.OrdersFragment;
 import com.imFarhad.inventoryorders.fragments.PaymentFragment;
 import com.imFarhad.inventoryorders.fragments.ProductsFragment;
 import com.imFarhad.inventoryorders.fragments.ProfileFragment;
@@ -43,7 +44,7 @@ import org.json.JSONObject;
 
 public class SliderMenu extends AppCompatActivity {
 
-    private TextView notificationCount;
+    //private TextView notificationCount;
     private DrawerLayout drawer;
     private ActionBarDrawerToggle drawerToggle;
     private Toolbar toolbar;
@@ -84,9 +85,9 @@ public class SliderMenu extends AppCompatActivity {
         userName.setText(sessionManager.getName());
         userEmail.setText(sessionManager.getEmail());
 
-        notificationCount = (TextView) navigationView.getMenu().findItem(R.id.nav_notification).getActionView();
+        //notificationCount = (TextView) navigationView.getMenu().findItem(R.id.nav_notification).getActionView();
 
-        initializeDrawerMenu();
+        //initializeDrawerMenu();
 
         setupDrawerContent(navigationView);
 
@@ -116,12 +117,16 @@ public class SliderMenu extends AppCompatActivity {
             case R.id.nav_profile:
                 fragmentTransaction(new ProfileFragment() , menuItem);
                 break;
-            case R.id.nav_notification:
-                if(!Connectivity.isConnected(this) && (!Connectivity.isConnectedMobile(this) || !Connectivity.isConnectedWifi(this)))
-                    startActivity(new Intent(this, NetworkError.class));
-                else
-                    fragmentTransaction(new NotificationFragment() , menuItem);
+            case R.id.nav_orders:
+                fragmentTransaction(new OrdersFragment() , menuItem);
                 break;
+
+//            case R.id.nav_notification:
+//                if(!Connectivity.isConnected(this) && (!Connectivity.isConnectedMobile(this) || !Connectivity.isConnectedWifi(this)))
+//                    startActivity(new Intent(this, NetworkError.class));
+//                else
+//                    fragmentTransaction(new NotificationFragment() , menuItem);
+//                break;
             case R.id.nav_signout:
                 logOut(menuItem);
                 break;
@@ -161,13 +166,14 @@ public class SliderMenu extends AppCompatActivity {
             super.onBackPressed();
         }
     }
-
+    /*
     private void initializeDrawerMenu(){
         notificationCount.setGravity(Gravity.CENTER_VERTICAL);
         notificationCount.setTextColor(getResources().getColor(R.color.colorAccent));
         notificationCount.setTypeface(null , Typeface.BOLD);
         notificationCount.setText("0");
     }
+    */
 
     private void fragmentTransaction(Fragment fragment, MenuItem menuItem){
         // Insert the fragment by replacing any existing fragment
