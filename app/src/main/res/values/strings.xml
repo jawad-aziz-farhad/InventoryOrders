@@ -83,5 +83,6 @@
     <string name="payment_confirmation">YES, I want to Pay this Amount</string>
     <string name="half_amount">Half Amount</string>
     <string name="total_amount">Total Amount</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

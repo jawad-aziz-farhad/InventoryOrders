@@ -22,10 +22,8 @@
         <activity android:name=".activities.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".activities.LoginActivity"
@@ -34,7 +32,6 @@
             android:name=".activities.SliderMenu"
             android:label="@string/title_activity_slider_menu"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity android:name=".activities.NetworkErrorActivity" />
         <activity android:name=".activities.ProductDetails" />
 
@@ -49,12 +46,17 @@
             android:name=".activities.LocationTracking"
             android:label="@string/title_activity_location_tracking"
             android:theme="@style/AppTheme.NoActionBar">
-
         </activity>
+
         <activity
             android:name=".activities.ShowLocation"
             android:label="@string/title_activity_show_location"
             android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".activities.MapsActivity"
+            android:label="@string/title_activity_maps">
+
         </activity>
     </application>
 
