@@ -73,6 +73,9 @@ public class CartItemsFragment extends Fragment implements ItemTouchListener{
 
                 StripePayment stripePayment = new StripePayment(getActivity());
                 stripePayment.OpenDialog();
+
+
+
             }
         });
 

@@ -10,11 +10,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.imFarhad.inventoryorders.R;
+import com.imFarhad.inventoryorders.interfaces.IResult;
+import com.imFarhad.inventoryorders.models.Product;
+import com.imFarhad.inventoryorders.services.VolleyService;
 import com.stripe.android.Stripe;
 import com.stripe.android.TokenCallback;
 import com.stripe.android.model.Card;
 import com.stripe.android.model.Token;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by Farhad on 11/10/2018.
@@ -28,6 +38,7 @@ public class StripePayment {
     private EditText cardNum, cardCVV , cardExpiryMonth , cardExpiryYear;
     private TextView totalAmount, halfAmount;
     private Stripe stripe;
+    private ArrayList<Product> cartItems;
     private static final String TAG = StripePayment.class.getSimpleName();
 
     public StripePayment(Context context){
@@ -124,6 +135,8 @@ public class StripePayment {
             public void onError(Exception error) {
                 hideDialog();
                 Log.e(TAG, error.toString());
+                Toast.makeText(context, context.getString(R.string.error_message), Toast.LENGTH_LONG).show();
+                hideDialog();
             }
 
             @Override
@@ -131,9 +144,72 @@ public class StripePayment {
                 hideDialog();
                 String _token = "TOKEN CREATED : " + token;
                 Log.w(TAG, _token);
-                Toast.makeText(context, _token, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, context.getString(R.string.stripe_payment_done) + _token, Toast.LENGTH_LONG).show();
+                hideDialog();
             }
         });
+    }
+
+    private void placeOrder(){
+        if(!Connectivity.isConnected(context) && (!Connectivity.isConnectedMobile(context) || !Connectivity.isConnectedWifi(context))){
+            Toast.makeText(context, R.string.internet_error_msg, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        showDialog();
+        JSONArray products = new JSONArray();
+        for(int i=0; i<cartItems.size();i++) {
+
+            JSONObject object = new JSONObject();
+            Product product = cartItems.get(i);
+            try {
+                object.put("product_id", product.getId());
+                object.put("quantity", product.getQuantity());
+                object.put("unit_price", product.getPrice());
+                products.put(object);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Log.w(TAG, String.valueOf(new SessionManager(context).getId()));
+        JSONObject data = new JSONObject();
+        try {
+            data.put("user_id", new SessionManager(context).getId());
+            data.put("products", products);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //CALLBACK FOR LOGIN RESPONSE
+        IResult iResult = new IResult() {
+            @Override
+            public void onSuccess(String requestType, JSONObject response) {
+                hideDialog();
+                Log.w(TAG,"Order Placing Response: "+ response.toString());
+
+                try {
+                    JSONObject success = response.getJSONObject("sucess");
+                    if (success != null && success.has("message")) {
+                        String message = success.getString("message");
+                        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+                    }else
+                        Toast.makeText(context, context.getString(R.string.error_message), Toast.LENGTH_LONG).show();
+                }
+                catch (JSONException e){ e.printStackTrace();}
+            }
+
+            @Override
+            public void onError(String requestType, VolleyError error) {
+                hideDialog();
+                Log.e(TAG, "Order Placing Error: "+ error.getMessage() + "\n" + error.getStackTrace());
+                Toast.makeText(context, context.getString(R.string.error_message),Toast.LENGTH_LONG).show();
+            }
+        };
+
+        Log.w(TAG + " PAYLOAD ", data.toString());
+        VolleyService volleyService = new VolleyService(iResult , context);
+        volleyService.postRequest(AppConfig.ORDER_SUBMIT_URL, "POST" , data);
     }
 
     //TODO: SHOWING PROGRESS DIALOG

@@ -85,4 +85,6 @@
     <string name="total_amount">Total Amount</string>
     <string name="title_activity_maps">Map</string>
 
+    <string name="stripe_payment_done">"Stripe Payment done successfully.\n"</string>
+
 </resources>
