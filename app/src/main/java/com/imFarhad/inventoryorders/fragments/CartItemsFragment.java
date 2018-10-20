@@ -25,11 +25,14 @@ import com.google.gson.reflect.TypeToken;
 import com.imFarhad.inventoryorders.R;
 import com.imFarhad.inventoryorders.adapters.CartItemsAdapter;
 import com.imFarhad.inventoryorders.adapters.ProductsAdapter;
+import com.imFarhad.inventoryorders.app.AppConfig;
 import com.imFarhad.inventoryorders.app.AppController;
 import com.imFarhad.inventoryorders.app.RecyclerItemTouchListener;
+import com.imFarhad.inventoryorders.app.StripePayment;
 import com.imFarhad.inventoryorders.interfaces.ItemTouchListener;
 import com.imFarhad.inventoryorders.interfaces.ProductItemClickListener;
 import com.imFarhad.inventoryorders.models.Product;
+import com.stripe.android.Stripe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +44,7 @@ public class CartItemsFragment extends Fragment implements ItemTouchListener{
     private CartItemsAdapter cartItemsAdapter;
     private RelativeLayout recyclerViewLayout;
     private Button checkOutBtn;
+    private Stripe stripe;
 
     @Override
     public void onAttach(Context context) {
@@ -60,14 +64,19 @@ public class CartItemsFragment extends Fragment implements ItemTouchListener{
         checkOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            Bundle bundle = new Bundle();
-            bundle.putParcelableArrayList("cartItems", cartItems);
-            Fragment fragment = new PaymentFragment();
-            fragment.setArguments(bundle);
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContent, fragment).commit();
+//                Bundle bundle = new Bundle();
+//                bundle.putParcelableArrayList("cartItems", cartItems);
+//                Fragment fragment = new PaymentFragment();
+//                fragment.setArguments(bundle);
+//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContent, fragment).commit();
+
+                StripePayment stripePayment = new StripePayment(getActivity());
+                stripePayment.OpenDialog();
             }
         });
+
+        stripe = new Stripe(getActivity(), AppConfig.STRIPE_KEY);
 
         recyclerViewLayout = (RelativeLayout)view.findViewById(R.id.recycler_view_layout);
         RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);

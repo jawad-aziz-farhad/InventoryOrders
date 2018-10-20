@@ -225,9 +225,10 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                 Log.w(TAG,"Order Placing Response: "+ response.toString());
 
                 try {
-                    if (response.has("success")) {
-                        JSONObject success = response.getJSONObject("success");
-                        Toast.makeText(getActivity(), success.getString("message"), Toast.LENGTH_LONG).show();
+                    JSONObject success = response.getJSONObject("sucess");
+                    if (success != null && success.has("message")) {
+                        String message = success.getString("message");
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                     }else
                         Toast.makeText(getActivity(), getString(R.string.error_message), Toast.LENGTH_LONG).show();
                 }
@@ -241,6 +242,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                 showError();
             }
         };
+
         Log.w(TAG + " PAYLOAD ", data.toString());
         VolleyService volleyService = new VolleyService(iResult , getActivity());
         volleyService.postRequest(AppConfig.ORDER_SUBMIT_URL, "POST" , data);

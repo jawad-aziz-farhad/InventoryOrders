@@ -16,6 +16,8 @@ public class AppConfig {
     public static final String REGISTRATION_COMPLETE = "registrationComplete";
     public static final String PUSH_NOTIFICATION = "pushNotification";
     public static final int NOTIFICATION_ID = 100;
-    public static final String PUBNUB_PUBLISH_KEY = "pub-c-f86699fe-3463-4dc7-a4a6-766de441b451";
+    public static final String PUBNUB_PUBLISHKEY = "pub-c-f86699fe-3463-4dc7-a4a6-766de441b451";
     public static final String PUBNUB_SUBSCRIBE_KEY = "sub-c-5dcd8e30-c78c-11e8-8f2a-6ea01b4be699";
+    public static final String PUBNUB_CHANNEL_NAME = "TrackLocation";
+    public static final String STRIPE_KEY = "pk_test_XpE228pCSBMrfoZmC5601SlQ";
 }

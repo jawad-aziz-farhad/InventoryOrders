@@ -15,6 +15,10 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="wrond_card_number">Card number is incorrect.</string>
+    <string name="wrond_card_cvv">Card CVV is incorrect.</string>
+    <string name="wrond_card_expiry_month">Card expiry month is incorrect.</string>
+    <string name="wrond_card_expiry_year">Card expiry year is incorrect.</string>
 
     <string name="title_activity_login">Sign in</string>
     <string name="error_message">Something went wrong.</string>
@@ -44,6 +48,7 @@
     <string name="home">Home</string>
     <string name="profile">Profile</string>
     <string name="settings">Settings</string>
+    <string name="orders">Orders</string>
     <string name="notifications">Notifications</string>
     <string name="signout">Sign Out</string>
     <string name="signing_off">Signing Off</string>
@@ -73,5 +78,10 @@
     <string name="customer_address">Customer Address</string>
     <string name="google_api_key">AIzaSyDvngnN4kn5oYvuEy-BY-aPfs8YO3wxE88</string>
     <string name="title_activity_location_tracking">LocationTracking</string>
+    <string name="title_activity_show_location">ShowLocation</string>
+
+    <string name="payment_confirmation">YES, I want to Pay this Amount</string>
+    <string name="half_amount">Half Amount</string>
+    <string name="total_amount">Total Amount</string>
 
 </resources>
