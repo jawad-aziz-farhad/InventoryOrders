@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.imFarhad.inventoryorders">
+
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
@@ -23,8 +24,7 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>/
-
+            </intent-filter>
         </activity>
         <activity
             android:name=".activities.LoginActivity"
@@ -33,7 +33,6 @@
             android:name=".activities.SliderMenu"
             android:label="@string/title_activity_slider_menu"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity android:name=".activities.NetworkErrorActivity" />
         <activity android:name=".activities.ProductDetails" />
 
@@ -47,14 +46,15 @@
         <activity
             android:name=".activities.LocationTracking"
             android:label="@string/title_activity_location_tracking"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activities.ShowLocation"
             android:label="@string/title_activity_show_location"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activities.MapsActivity"
+            android:label="@string/title_activity_maps"></activity>
+        <activity android:name=".activities.AssignedDeliveries"></activity>
     </application>
 
 </manifest>

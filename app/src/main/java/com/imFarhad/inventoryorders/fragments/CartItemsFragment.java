@@ -71,7 +71,7 @@ public class CartItemsFragment extends Fragment implements ItemTouchListener{
 //                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 //                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContent, fragment).commit();
 
-                StripePayment stripePayment = new StripePayment(getActivity());
+                StripePayment stripePayment = new StripePayment(getActivity(), cartItems);
                 stripePayment.OpenDialog();
             }
         });

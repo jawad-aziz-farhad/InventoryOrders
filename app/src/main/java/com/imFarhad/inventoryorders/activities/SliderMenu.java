@@ -2,48 +2,38 @@ package com.imFarhad.inventoryorders.activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
-import android.webkit.WebViewFragment;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.NetworkError;
-import com.android.volley.VolleyError;
 import com.imFarhad.inventoryorders.R;
-import com.imFarhad.inventoryorders.app.AppConfig;
-import com.imFarhad.inventoryorders.app.Connectivity;
 import com.imFarhad.inventoryorders.app.Preferences;
 import com.imFarhad.inventoryorders.app.SessionManager;
 import com.imFarhad.inventoryorders.fragments.CategoriesFragment;
-import com.imFarhad.inventoryorders.fragments.NotificationFragment;
-import com.imFarhad.inventoryorders.fragments.PaymentFragment;
-import com.imFarhad.inventoryorders.fragments.ProductsFragment;
+import com.imFarhad.inventoryorders.fragments.OrdersFragment;
 import com.imFarhad.inventoryorders.fragments.ProfileFragment;
 import com.imFarhad.inventoryorders.fragments.SettingsFragment;
 import com.imFarhad.inventoryorders.interfaces.IResult;
 import com.imFarhad.inventoryorders.services.VolleyService;
-import org.json.JSONException;
+
 import org.json.JSONObject;
 
 public class SliderMenu extends AppCompatActivity {
 
-    private TextView notificationCount;
+    //private TextView notificationCount;
     private DrawerLayout drawer;
     private ActionBarDrawerToggle drawerToggle;
     private Toolbar toolbar;
@@ -84,9 +74,9 @@ public class SliderMenu extends AppCompatActivity {
         userName.setText(sessionManager.getName());
         userEmail.setText(sessionManager.getEmail());
 
-        notificationCount = (TextView) navigationView.getMenu().findItem(R.id.nav_notification).getActionView();
+        //notificationCount = (TextView) navigationView.getMenu().findItem(R.id.nav_notification).getActionView();
 
-        initializeDrawerMenu();
+        //initializeDrawerMenu();
 
         setupDrawerContent(navigationView);
 
@@ -116,12 +106,19 @@ public class SliderMenu extends AppCompatActivity {
             case R.id.nav_profile:
                 fragmentTransaction(new ProfileFragment() , menuItem);
                 break;
-            case R.id.nav_notification:
-                if(!Connectivity.isConnected(this) && (!Connectivity.isConnectedMobile(this) || !Connectivity.isConnectedWifi(this)))
-                    startActivity(new Intent(this, NetworkError.class));
+            case R.id.nav_orders:
+                if(sessionManager.getType().equals("shopkeeper"))
+                    fragmentTransaction(new OrdersFragment() , menuItem);
                 else
-                    fragmentTransaction(new NotificationFragment() , menuItem);
+                    menuItem.setVisible(false);
                 break;
+
+//            case R.id.nav_notification:
+//                if(!Connectivity.isConnected(this) && (!Connectivity.isConnectedMobile(this) || !Connectivity.isConnectedWifi(this)))
+//                    startActivity(new Intent(this, NetworkError.class));
+//                else
+//                    fragmentTransaction(new NotificationFragment() , menuItem);
+//                break;
             case R.id.nav_signout:
                 logOut(menuItem);
                 break;
@@ -161,13 +158,14 @@ public class SliderMenu extends AppCompatActivity {
             super.onBackPressed();
         }
     }
-
+    /*
     private void initializeDrawerMenu(){
         notificationCount.setGravity(Gravity.CENTER_VERTICAL);
         notificationCount.setTextColor(getResources().getColor(R.color.colorAccent));
         notificationCount.setTypeface(null , Typeface.BOLD);
         notificationCount.setText("0");
     }
+    */
 
     private void fragmentTransaction(Fragment fragment, MenuItem menuItem){
         // Insert the fragment by replacing any existing fragment

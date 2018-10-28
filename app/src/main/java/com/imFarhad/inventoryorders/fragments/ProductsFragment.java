@@ -1,14 +1,7 @@
 package com.imFarhad.inventoryorders.fragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.InsetDrawable;
-import android.hardware.camera2.TotalCaptureResult;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,17 +9,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,19 +22,11 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.imFarhad.inventoryorders.R;
-import com.imFarhad.inventoryorders.activities.LoginActivity;
-import com.imFarhad.inventoryorders.activities.SliderMenu;
-import com.imFarhad.inventoryorders.activities.Splash;
-import com.imFarhad.inventoryorders.adapters.CategoriesAdapter;
 import com.imFarhad.inventoryorders.adapters.ProductsAdapter;
 import com.imFarhad.inventoryorders.app.AppConfig;
 import com.imFarhad.inventoryorders.app.AppController;
-import com.imFarhad.inventoryorders.app.GridSpacingItemDecoration;
-import com.imFarhad.inventoryorders.app.SessionManager;
 import com.imFarhad.inventoryorders.interfaces.IResult;
-import com.imFarhad.inventoryorders.interfaces.ItemClickListener;
 import com.imFarhad.inventoryorders.interfaces.ProductItemClickListener;
-import com.imFarhad.inventoryorders.models.Category;
 import com.imFarhad.inventoryorders.models.Product;
 import com.imFarhad.inventoryorders.services.VolleyService;
 
@@ -80,7 +60,6 @@ public class ProductsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.recycler_view, container,false);
         view.findViewById(R.id.checkOutbtn).setVisibility(View.GONE);
         ProductItemClickListener listener = new ProductItemClickListener() {
@@ -139,8 +118,6 @@ public class ProductsFragment extends Fragment {
         super.onViewStateRestored(savedInstanceState);
 
     }
-
-
     //TODO: PULLING PRODUCTS FROM SERVER
     private void pullServerData(){
         showDialog();
@@ -176,7 +153,6 @@ public class ProductsFragment extends Fragment {
                     this.products.add(product);
                 }
             }
-
             else
                 Toast.makeText(getActivity(), getString(R.string.error_message), Toast.LENGTH_LONG).show();
         }

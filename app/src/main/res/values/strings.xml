@@ -79,9 +79,13 @@
     <string name="google_api_key">AIzaSyDvngnN4kn5oYvuEy-BY-aPfs8YO3wxE88</string>
     <string name="title_activity_location_tracking">LocationTracking</string>
     <string name="title_activity_show_location">ShowLocation</string>
+    <string name="check_location">Check Location</string>
 
     <string name="payment_confirmation">YES, I want to Pay this Amount</string>
     <string name="half_amount">Half Amount</string>
     <string name="total_amount">Total Amount</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string name="stripe_payment_done">"Stripe Payment done successfully.\n"</string>
 
 </resources>

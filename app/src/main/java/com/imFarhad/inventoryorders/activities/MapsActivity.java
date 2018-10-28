@@ -4,20 +4,13 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
@@ -39,35 +32,26 @@ import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
-
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ShowLocation extends AppCompatActivity implements OnMapReadyCallback{
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private SupportMapFragment supportMapFragment;
-    private GoogleMap google_Map;
-    private Marker marker;
+    private GoogleMap mMap;
     private PubNub pubNub;
+    private Marker marker;
     private static final int REQUEST_CODE = 100;
     private static final String TAG = LocationTracking.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_show_location);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().hide();
-        }
-        supportMapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
-        supportMapFragment.getMapAsync(this);
+        setContentView(R.layout.activity_maps);
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         checkPermissions();
     }
@@ -138,8 +122,8 @@ public class ShowLocation extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         pubNub.subscribe()
-              .channels(Arrays.asList(AppConfig.PUBNUB_CHANNEL_NAME))
-              .execute();
+                .channels(Arrays.asList(AppConfig.PUBNUB_CHANNEL_NAME))
+                .execute();
     }
 
 
@@ -149,18 +133,18 @@ public class ShowLocation extends AppCompatActivity implements OnMapReadyCallbac
         LatLng newLocation = new LatLng(Double.valueOf(newLoc.get("lat")), Double.valueOf(newLoc.get("lng")));
         if(marker != null){
             animateIcon(newLocation);
-            boolean contains = google_Map.getProjection().getVisibleRegion().latLngBounds.contains(newLocation);
+            boolean contains = mMap.getProjection().getVisibleRegion().latLngBounds.contains(newLocation);
             if(!contains)
-                google_Map.moveCamera(CameraUpdateFactory.newLatLng(newLocation));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(newLocation));
         }
         else {
-            google_Map.animateCamera(CameraUpdateFactory.newLatLngZoom(newLocation, 15.5f));
-            marker = google_Map.addMarker(new MarkerOptions().position(newLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_on_black_24dp)));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(newLocation, 15.5f));
+            marker = mMap.addMarker(new MarkerOptions().position(newLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_on_black_24dp)));
         }
 
     }
 
-    private void animateIcon(final LatLng location){
+    private void animateIcon(final LatLng location) {
         final LatLng startPosition = marker.getPosition();
         final LatLng endPosition   = new LatLng(location.latitude, location.longitude);
 
@@ -181,49 +165,31 @@ public class ShowLocation extends AppCompatActivity implements OnMapReadyCallbac
         valueAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
+              super.onAnimationEnd(animation);
             }
         });
-
         valueAnimator.start();
     }
-
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        supportMapFragment.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        supportMapFragment.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        supportMapFragment.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        supportMapFragment.onLowMemory();
-    }
-
+    /**
+     * Manipulates the map once available.
+     * This callback is triggered when the map is ready to be used.
+     * This is where we can add markers or lines, add listeners or move the camera. In this case,
+     * we just add a marker near Sydney, Australia.
+     * If Google Play services is not installed on the device, the user will be prompted to install
+     * it inside the SupportMapFragment. This method will only be triggered once the user has
+     * installed Google Play services and returned to the app.
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
+//        mMap = googleMap;
+//        LatLng sydney = new LatLng(-34, 151);
+//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         try {
-            google_Map = googleMap;
-            google_Map.setMyLocationEnabled(true);
+            mMap = googleMap;
+            mMap.setMyLocationEnabled(true);
         } catch (SecurityException e) {
             e.printStackTrace();
         }
     }
-
-
 }
