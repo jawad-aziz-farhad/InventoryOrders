@@ -3,6 +3,9 @@ package com.imFarhad.inventoryorders.app;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +15,8 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.imFarhad.inventoryorders.R;
+import com.imFarhad.inventoryorders.fragments.CartItemsFragment;
+import com.imFarhad.inventoryorders.fragments.OrdersFragment;
 import com.imFarhad.inventoryorders.interfaces.IResult;
 import com.imFarhad.inventoryorders.models.Product;
 import com.imFarhad.inventoryorders.services.VolleyService;
@@ -41,9 +46,10 @@ public class StripePayment {
     private ArrayList<Product> cartItems;
     private static final String TAG = StripePayment.class.getSimpleName();
 
-    public StripePayment(Context context){
+    public StripePayment(Context context, ArrayList<Product> cartItems){
         this.context = context;
         progressDialog = new ProgressDialog(context);
+        this.cartItems = cartItems;
     }
 
     public void OpenDialog() {
@@ -145,11 +151,12 @@ public class StripePayment {
                 String _token = "TOKEN CREATED : " + token;
                 Log.w(TAG, _token);
                 Toast.makeText(context, context.getString(R.string.stripe_payment_done) + _token, Toast.LENGTH_LONG).show();
-                hideDialog();
+                placeOrder();
             }
         });
     }
 
+    //TODO: PLACING ORDER TO OUR SERVER AFTER GETTING STRIPE TOKEN
     private void placeOrder(){
         if(!Connectivity.isConnected(context) && (!Connectivity.isConnectedMobile(context) || !Connectivity.isConnectedWifi(context))){
             Toast.makeText(context, R.string.internet_error_msg, Toast.LENGTH_LONG).show();
@@ -158,7 +165,7 @@ public class StripePayment {
 
         showDialog();
         JSONArray products = new JSONArray();
-        for(int i=0; i<cartItems.size();i++) {
+        for(int i=0; i< cartItems.size();i++) {
 
             JSONObject object = new JSONObject();
             Product product = cartItems.get(i);
@@ -187,16 +194,20 @@ public class StripePayment {
             public void onSuccess(String requestType, JSONObject response) {
                 hideDialog();
                 Log.w(TAG,"Order Placing Response: "+ response.toString());
-
                 try {
                     JSONObject success = response.getJSONObject("sucess");
                     if (success != null && success.has("message")) {
                         String message = success.getString("message");
                         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-                    }else
+                        gotoOrders();
+                    }else {
                         Toast.makeText(context, context.getString(R.string.error_message), Toast.LENGTH_LONG).show();
+                    }
                 }
-                catch (JSONException e){ e.printStackTrace();}
+                catch (JSONException e){
+
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -210,6 +221,14 @@ public class StripePayment {
         Log.w(TAG + " PAYLOAD ", data.toString());
         VolleyService volleyService = new VolleyService(iResult , context);
         volleyService.postRequest(AppConfig.ORDER_SUBMIT_URL, "POST" , data);
+    }
+
+    //TODO: GOING TO ORDERS FRAGMENTS
+    private void gotoOrders(){
+        Fragment fragment = new OrdersFragment();
+        FragmentManager fragmentManager = ((FragmentActivity)context).getSupportFragmentManager();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContent, fragment).commit();
     }
 
     //TODO: SHOWING PROGRESS DIALOG

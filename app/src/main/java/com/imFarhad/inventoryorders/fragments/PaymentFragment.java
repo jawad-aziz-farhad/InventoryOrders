@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -80,7 +81,8 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    private void initView(View view){
+    private void initView(View view) {
+
         cardNum1 = (EditText)view.findViewById(R.id.editStripeCardNumber1);
         cardNum2 = (EditText)view.findViewById(R.id.editStripeCardNumber2);
         cardNum3 = (EditText)view.findViewById(R.id.editStripeCardNumber3);
@@ -186,6 +188,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
             placeOrder();
     }
 
+    //TODO: PLACING ORDERS
     private void placeOrder(){
         if(!Connectivity.isConnected(getActivity()) && (!Connectivity.isConnectedMobile(getActivity()) || !Connectivity.isConnectedWifi(getActivity()))){
             Toast.makeText(getActivity(), R.string.internet_error_msg, Toast.LENGTH_LONG).show();
@@ -229,6 +232,7 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
                     if (success != null && success.has("message")) {
                         String message = success.getString("message");
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        gotoOrders();
                     }else
                         Toast.makeText(getActivity(), getString(R.string.error_message), Toast.LENGTH_LONG).show();
                 }
@@ -248,6 +252,13 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
         volleyService.postRequest(AppConfig.ORDER_SUBMIT_URL, "POST" , data);
     }
 
+    //TODO: GOING TO ORDERS FRAGMENTS
+    private void gotoOrders(){
+        Fragment fragment = new CartItemsFragment();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.popBackStack();
+        fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContent, fragment).commit();
+    }
     //TODO: SHOW ERROR IN TOAST
     private void showError(){
         Toast.makeText(getActivity(), getString(R.string.error_message), Toast.LENGTH_LONG).show();
