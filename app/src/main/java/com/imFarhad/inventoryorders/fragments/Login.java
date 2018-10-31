@@ -98,8 +98,6 @@ public class Login extends Fragment {
             Toast.makeText(getActivity(), getString(R.string.internet_error_msg),Toast.LENGTH_LONG).show();
     }
 
-
-
     //TODO: LOGGIN IN TO THE APP
     public void login() {
         showDialog();

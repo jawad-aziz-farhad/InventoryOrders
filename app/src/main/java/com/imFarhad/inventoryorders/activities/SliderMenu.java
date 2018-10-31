@@ -14,11 +14,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.imFarhad.inventoryorders.R;
 import com.imFarhad.inventoryorders.app.Preferences;
 import com.imFarhad.inventoryorders.app.SessionManager;
@@ -75,10 +75,11 @@ public class SliderMenu extends AppCompatActivity {
         userEmail.setText(sessionManager.getEmail());
 
         //notificationCount = (TextView) navigationView.getMenu().findItem(R.id.nav_notification).getActionView();
-
         //initializeDrawerMenu();
 
         setupDrawerContent(navigationView);
+        show_hide_item(navigationView);
+
 
     }
 
@@ -92,6 +93,16 @@ public class SliderMenu extends AppCompatActivity {
                         return true;
                     }
                 });
+    }
+
+    //TODO: SHOWING HIDING MENU ITEMS
+    private void show_hide_item(NavigationView navigationView) {
+        Menu menu = navigationView.getMenu();
+        String type = new SessionManager(this).getType();
+        Log.w(TAG, "User Type: " + type);
+        if(type.equals("salesman")) {
+            menu.findItem(R.id.nav_orders).setVisible(false);
+        }
     }
 
     //TODO: CONFIGURING THE ACTION WHEN EACH DRAWER ITEM CLICKED
