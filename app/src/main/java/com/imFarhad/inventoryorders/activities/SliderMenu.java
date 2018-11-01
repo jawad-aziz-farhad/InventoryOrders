@@ -13,33 +13,23 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.imFarhad.inventoryorders.R;
-import com.imFarhad.inventoryorders.app.Preferences;
 import com.imFarhad.inventoryorders.app.SessionManager;
 import com.imFarhad.inventoryorders.fragments.CategoriesFragment;
 import com.imFarhad.inventoryorders.fragments.OrdersFragment;
 import com.imFarhad.inventoryorders.fragments.ProfileFragment;
 import com.imFarhad.inventoryorders.fragments.SettingsFragment;
-import com.imFarhad.inventoryorders.interfaces.IResult;
-import com.imFarhad.inventoryorders.services.VolleyService;
-
-import org.json.JSONObject;
 
 public class SliderMenu extends AppCompatActivity {
 
-    //private TextView notificationCount;
     private DrawerLayout drawer;
     private ActionBarDrawerToggle drawerToggle;
     private Toolbar toolbar;
     private SessionManager sessionManager;
-    private IResult iResult;
-    private VolleyService volleyService;
     private static final String TAG = SliderMenu.class.getSimpleName();
 
     @Override
@@ -47,7 +37,6 @@ public class SliderMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slider_menu);
 
-        Log.w(TAG, "FCM TOKEN : "+ new Preferences(this).getFCMToken());
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -74,32 +63,27 @@ public class SliderMenu extends AppCompatActivity {
         userName.setText(sessionManager.getName());
         userEmail.setText(sessionManager.getEmail());
 
-        //notificationCount = (TextView) navigationView.getMenu().findItem(R.id.nav_notification).getActionView();
-        //initializeDrawerMenu();
-
         setupDrawerContent(navigationView);
         show_hide_item(navigationView);
-
 
     }
 
     //TODO: SETTING UP DRAWER CONTENT
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        selectDrawerItem(menuItem);
-                        return true;
-                    }
-                });
+            new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(MenuItem menuItem) {
+                selectDrawerItem(menuItem);
+                return true;
+                }
+            });
     }
 
     //TODO: SHOWING HIDING MENU ITEMS
     private void show_hide_item(NavigationView navigationView) {
         Menu menu = navigationView.getMenu();
         String type = new SessionManager(this).getType();
-        Log.w(TAG, "User Type: " + type);
         if(type.equals("salesman")) {
             menu.findItem(R.id.nav_orders).setVisible(false);
         }
@@ -123,13 +107,6 @@ public class SliderMenu extends AppCompatActivity {
                 else
                     menuItem.setVisible(false);
                 break;
-
-//            case R.id.nav_notification:
-//                if(!Connectivity.isConnected(this) && (!Connectivity.isConnectedMobile(this) || !Connectivity.isConnectedWifi(this)))
-//                    startActivity(new Intent(this, NetworkError.class));
-//                else
-//                    fragmentTransaction(new NotificationFragment() , menuItem);
-//                break;
             case R.id.nav_signout:
                 logOut(menuItem);
                 break;
@@ -169,14 +146,6 @@ public class SliderMenu extends AppCompatActivity {
             super.onBackPressed();
         }
     }
-    /*
-    private void initializeDrawerMenu(){
-        notificationCount.setGravity(Gravity.CENTER_VERTICAL);
-        notificationCount.setTextColor(getResources().getColor(R.color.colorAccent));
-        notificationCount.setTypeface(null , Typeface.BOLD);
-        notificationCount.setText("0");
-    }
-    */
 
     private void fragmentTransaction(Fragment fragment, MenuItem menuItem){
         // Insert the fragment by replacing any existing fragment
@@ -190,30 +159,12 @@ public class SliderMenu extends AppCompatActivity {
         drawer.closeDrawers();
 
     }
-    /* SHOWING TOAST MESSAGE */
-    private void showToast(String message){
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
 
     //TODO: SIGNING THE USER OUT FROM APP
     private void logOut(MenuItem menuItem){
-        // Highlight the selected item has been done by NavigationView
         menuItem.setChecked(true);
-        // Close the navigation drawer
         drawer.closeDrawers();
-
         new SessionManager(this).clearLogin();
         startActivity(new Intent(this, LoginActivity.class));
-
-    }
-
-
-    //TODO: CALLING VOLLEY SERVICE FOR BACK END COMMUNICATION
-    private void callVolleyService(String url, String requestType, JSONObject data){
-        volleyService = new VolleyService(iResult, SliderMenu.this);
-        if(requestType.equals("POST"))
-            volleyService.postRequest(url, "POST" , data);
-        else
-            volleyService.getRequest(url, "GET" , data);
     }
 }

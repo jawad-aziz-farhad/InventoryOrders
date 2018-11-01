@@ -22,7 +22,6 @@
         <activity android:name=".activities.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -53,8 +52,9 @@
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activities.MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
-        <activity android:name=".activities.AssignedDeliveries"></activity>
+            android:label="@string/title_activity_maps">
+        </activity>
+        <activity android:name=".activities.AssignedDeliveries"/>
     </application>
 
 </manifest>

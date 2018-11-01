@@ -5,12 +5,12 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -40,7 +40,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ShowLocation extends AppCompatActivity implements OnMapReadyCallback{
+public class ShowLocation extends AppCompatActivity implements OnMapReadyCallback {
 
     private SupportMapFragment supportMapFragment;
     private GoogleMap google_Map;
@@ -57,15 +57,13 @@ public class ShowLocation extends AppCompatActivity implements OnMapReadyCallbac
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.content_show_location);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        if (toolbar != null) {
-//            setSupportActionBar(toolbar);
-//            getSupportActionBar().hide();
-//        }
         supportMapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
 
-        checkPermissions();
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M)
+            checkPermissions();
+        else
+            initPubNub();
     }
 
     //TODO: CHECKING PERMISSION
@@ -87,7 +85,6 @@ public class ShowLocation extends AppCompatActivity implements OnMapReadyCallbac
         pnConfiguration.setPublishKey(AppConfig.PUBNUB_PUBLISHKEY);
         pnConfiguration.setSecure(true);
         pubNub = new PubNub(pnConfiguration);
-        subscribeLocationChannel();
     }
 
     @Override
@@ -151,11 +148,12 @@ public class ShowLocation extends AppCompatActivity implements OnMapReadyCallbac
         }
         else {
             google_Map.animateCamera(CameraUpdateFactory.newLatLngZoom(newLocation, 15.5f));
-            marker = google_Map.addMarker(new MarkerOptions().position(newLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_on_black_24dp)));
+            marker = google_Map.addMarker(new MarkerOptions().position(newLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.car)));
         }
 
     }
 
+    //TODO: ANIMATING ICON ACCORING TO THE LOCATION
     private void animateIcon(final LatLng location){
         final LatLng startPosition = marker.getPosition();
         final LatLng endPosition   = new LatLng(location.latitude, location.longitude);
@@ -219,7 +217,7 @@ public class ShowLocation extends AppCompatActivity implements OnMapReadyCallbac
         } catch (SecurityException e) {
             e.printStackTrace();
         }
+
+        subscribeLocationChannel();
     }
-
-
 }

@@ -9,7 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 public interface LatLngInterpolator {
    LatLng interpolate(float fraction, LatLng a, LatLng b);
 
-    public class LinearFixed implements LatLngInterpolator {
+   class LinearFixed implements LatLngInterpolator {
 
         @Override
         public LatLng interpolate(float fraction, LatLng a, LatLng b) {
