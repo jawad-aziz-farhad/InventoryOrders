@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +28,7 @@ import com.imFarhad.inventoryorders.app.SessionManager;
 import com.imFarhad.inventoryorders.interfaces.OrderItemClickListener;
 import com.imFarhad.inventoryorders.interfaces._IResult;
 import com.imFarhad.inventoryorders.models.Order;
+import com.imFarhad.inventoryorders.models.OrderDetails;
 import com.imFarhad.inventoryorders.services.VolleyService;
 
 import org.json.JSONArray;
@@ -34,6 +36,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Farhad on 12/10/2018.
@@ -46,30 +50,29 @@ public class OrdersFragment extends Fragment {
     private ArrayList<Order> orders;
     private RecyclerView recyclerView;
     private OrdersAdapter ordersAdapter;
-    private Button check_location;
-
+    private JSONArray ordersResponse ;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.orders, container, false);
+        View view = inflater.inflate(R.layout.recycler_view, container, false);
         progressDialog = new ProgressDialog(getActivity());
         orders = new ArrayList<>();
         recyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);
-        check_location = (Button)view.findViewById(R.id.check_location);
         progressDialog = new ProgressDialog(getActivity());
         OrderItemClickListener orderItemClickListener = new OrderItemClickListener() {
             @Override
             public void OnItemClick(Order order) {
-                Toast.makeText(getActivity(), String.valueOf(order.getId()), Toast.LENGTH_LONG).show();
+                showDetails(order);
+            }
+            @Override
+            public void showOrderDetails(Order order) {
+                showDetails(order);
+            }
+            @Override
+            public void showOrderLocation(Order order) {
+                Toast.makeText(getActivity(), "SHOW LOCATION "+ order.getOrder_name(), Toast.LENGTH_SHORT).show();
             }
         };
-
-        check_location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getActivity(), ShowLocation.class));
-            }
-        });
 
         ordersAdapter = new OrdersAdapter(getActivity(), this.orders , orderItemClickListener);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -90,21 +93,22 @@ public class OrdersFragment extends Fragment {
             public void onSuccess(String requestType, JSONArray response) {
                 hideDialog();
                 try {
-                    JSONArray _orders = response.getJSONArray(0);
-                    for(int i=0; i<_orders.length();i++){
-                       JSONObject jsonObject = _orders.getJSONObject(i);
-                       Log.w(TAG, jsonObject.getString("unit_price"));
-                        Order order = new Order();
-                        order.setId(jsonObject.getInt("id"));
-                        order.setProduct_id(jsonObject.getInt("product_id"));
-                        order.setOrder_id(jsonObject.getInt("order_id"));
-                        order.setUnit_price(Integer.parseInt(jsonObject.getString("unit_price")));
-                        order.setAmount(Integer.parseInt(jsonObject.getString("amount")));
-                        order.setCreated_at(jsonObject.getString("created_at"));
-                        order.setUpdated_at(jsonObject.getString("updated_at"));
-                        orders.add(order);
+                      ordersResponse = response;
 
-                    }
+                      for(int i=0; i<response.length();i++) {
+                          JSONArray orderdata = response.getJSONArray(i);
+                          int totalAmount = 0;
+                          for(int j=0; j<orderdata.length();j++){
+                             JSONObject item = orderdata.getJSONObject(j);
+                             totalAmount += Integer.parseInt(item.getString("amount"));
+                          }
+                          Order order = new Order();
+                          order.setOrder_id(i);
+                          order.setOrder_name("Order Num " + (i + 1));
+                          order.setTotal_amount(totalAmount);
+                          order.setPaid_amount(totalAmount/2);
+                          orders.add(order);
+                      }
                 }catch (JSONException e){ e.printStackTrace();}
 
                 ordersAdapter.notifyDataSetChanged();
@@ -136,5 +140,38 @@ public class OrdersFragment extends Fragment {
         progressDialog.dismiss();
     }
 
+    //TODO: SHOWING SELECTED ORDER'S DETAILS
+    private void showDetails(Order order){
+        try {
+            JSONArray orderDetails = ordersResponse.getJSONArray(order.getOrder_id());
+            if(orderDetails.length() == 0){
+                Toast.makeText(getActivity(), "NO DETAILS FOUND", Toast.LENGTH_LONG).show();
+                return;
+            }
+            ArrayList<OrderDetails> selectedOrder = new ArrayList<>();
+            for(int i=0; i<orderDetails.length(); i++){
+                JSONObject jsonObject = orderDetails.getJSONObject(i);
+                OrderDetails order_Details = new OrderDetails();
+                order_Details.setId(jsonObject.getInt("id"));
+                order_Details.setProduct_id(jsonObject.getInt("product_id"));
+                order_Details.setOrder_id(jsonObject.getInt("order_id"));
+                order_Details.setUnit_price(Integer.parseInt(jsonObject.getString("unit_price")));
+                order_Details.setAmount(Integer.parseInt(jsonObject.getString("amount")));
+                order_Details.setQuantity(jsonObject.getInt("quantity"));
+                order_Details.setCreated_at(jsonObject.getString("created_at"));
+                order_Details.setUpdated_at(jsonObject.getString("updated_at"));
+                selectedOrder.add(order_Details);
+            }
+
+            if(selectedOrder.size() > 0){
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("selectedOrder", selectedOrder);
+                Fragment fragment = new OrderDetailsFragment();
+                fragment.setArguments(bundle);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContent, fragment).commit();
+            }
+        }catch (JSONException e){ e.printStackTrace();}
+    }
 
 }

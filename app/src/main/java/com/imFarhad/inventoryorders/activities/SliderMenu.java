@@ -95,9 +95,9 @@ public class SliderMenu extends AppCompatActivity {
             case R.id.nav_home:
                 fragmentTransaction(new CategoriesFragment() , menuItem);
                 break;
-            case R.id.nav_manage:
-                fragmentTransaction(new SettingsFragment() , menuItem);
-                break;
+//            case R.id.nav_manage:
+//                fragmentTransaction(new SettingsFragment() , menuItem);
+//                break;
             case R.id.nav_profile:
                 fragmentTransaction(new ProfileFragment() , menuItem);
                 break;

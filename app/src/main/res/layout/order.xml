@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/view_foreground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -15,11 +14,10 @@
 
     <ImageView
         android:id="@+id/productImage"
-        android:layout_width="@dimen/thumbnail"
-        android:layout_height="@dimen/thumbnail"
+        android:layout_width="@dimen/cart_thumbnail"
+        android:layout_height="@dimen/cart_thumbnail"
         android:layout_marginRight="@dimen/activity_vertical_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:scaleType="centerCrop"
         android:src="@drawable/ic_shopping_cart"
         android:layout_centerVertical="true"/>
 
@@ -30,7 +28,7 @@
         android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
         android:maxLines="1"
-        android:textSize="17dp"
+        android:textSize="@dimen/text_size_medium"
         android:textColor="@color/colorPrimaryDark"
         android:layout_toRightOf="@id/productImage"
         android:layout_toEndOf="@id/productImage"
@@ -40,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="2"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:id="@+id/price_layout"
         android:layout_toRightOf="@id/productImage"
         android:layout_toEndOf="@id/productImage"
@@ -48,29 +46,41 @@
 
         <TextView
             android:id="@+id/productUnitPrice"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
-            android:text="$ 100"
-            android:textSize="17dp"
+            android:text="Unit Price: "
+            android:textSize="@dimen/badge_text_size"
             android:textColor="@color/red"/>
 
         <TextView
+            android:id="@+id/productQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/red"
+            android:text="Amount: "
+            android:textSize="@dimen/badge_text_size"/>
+
+        <TextView
             android:id="@+id/productSubTotal"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
-            android:text="$ 100"
-            android:textSize="17dp"
+            android:text="Total: "
+            android:textSize="@dimen/badge_text_size"
             android:textColor="@color/red"/>
 
+
+
     </LinearLayout>
+
+
+
 
     <TextView
         android:id="@+id/productDescription"
@@ -80,33 +90,8 @@
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@id/productImage"
         android:layout_toEndOf="@id/productImage"
-        android:textSize="12dp"
+        android:textSize="@dimen/badge_text_size"
         android:textColor="@color/description"/>
-
-    <TextView
-        android:id="@+id/productPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/productImage"
-        android:layout_toEndOf="@id/productImage"
-        android:textColor="@color/colorAccent"
-        android:textStyle="bold" />
-
-
-    <LinearLayout
-        android:id="@+id/add_cart_btn_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="bottom|end"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true">
-
-
-    </LinearLayout>
-
 
 
 </RelativeLayout>

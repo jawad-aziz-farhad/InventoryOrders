@@ -2,12 +2,16 @@ package com.imFarhad.inventoryorders.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.imFarhad.inventoryorders.R;
 import com.imFarhad.inventoryorders.interfaces.OrderItemClickListener;
@@ -17,9 +21,10 @@ import java.util.ArrayList;
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder> {
 
-    private Context context;
+    public Context context;
     private ArrayList<Order> orders;
     private OrderItemClickListener orderItemClickListener;
+    public Order order = null;
 
     public OrdersAdapter(Context context, ArrayList<Order> orders, OrderItemClickListener orderItemClickListener){
         this.context = context;
@@ -30,47 +35,100 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     @NonNull
     @Override
     public OrdersAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.order, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.orders, viewGroup, false);
         return new OrdersAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull OrdersAdapter.ViewHolder viewHolder, int i) {
-        Order order = orders.get(i);
+        final Order order = orders.get(i);
         viewHolder.bind(order, orderItemClickListener);
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                orderItemClickListener.OnItemClick(order);
+            }
+        });
+        viewHolder.overFlow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            setOrder(order);
+            showPopupMenu(view);
+            }
+        });
     }
+
 
     @Override
     public int getItemCount() {
         return orders.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView productName;
-        private TextView productUnitPrice;
-        private TextView productTotalPrice;
-        private TextView productDescription;
-        private ImageView productImage;
-        public static final String TAG = ProductsAdapter.class.getSimpleName();
+        private TextView orderName;
+        private TextView orderPaidAmount;
+        private TextView orderTotalAmount;
+        private ImageView overFlow;
+        public final String TAG = ProductsAdapter.class.getSimpleName();
 
         public ViewHolder(final View itemView) {
             super(itemView);
-            productName        = (TextView) itemView.findViewById(R.id.productName);
-            productUnitPrice   = (TextView) itemView.findViewById(R.id.productUnitPrice);
-            productTotalPrice  = (TextView) itemView.findViewById(R.id.productSubTotal);
-            productDescription = (TextView)itemView.findViewById(R.id.productDescription);
-            productImage       = (ImageView) itemView.findViewById(R.id.productImage);
+            orderName        = (TextView) itemView.findViewById(R.id.orderName);
+            orderPaidAmount  = (TextView) itemView.findViewById(R.id.orderPaidAmount);
+            orderTotalAmount = (TextView) itemView.findViewById(R.id.orderTotalAmount);
+            overFlow         = (ImageView) itemView.findViewById(R.id.overflow);
+
         }
 
         public void bind(final Order order, final OrderItemClickListener listener) {
-            productName.setText("Order Num : ");
+            orderName.setText(order.getOrder_name());
+            orderPaidAmount.setText(context.getString(R.string.paid));
+            orderTotalAmount.setText(context.getString(R.string.total));
             String currency = "  " + itemView.getContext().getString(R.string.currency);
-            productUnitPrice.setText(String.valueOf(order.getUnit_price()));
-            productTotalPrice.setText(String.valueOf(order.getAmount()));
-            productUnitPrice.append(currency);
-            productTotalPrice.append(currency);
-            productDescription.setText("");
+            orderPaidAmount.append("  "  + String.valueOf(order.getPaid_amount()) + "  " + currency);
+            orderTotalAmount.append("  " + String.valueOf(order.getTotal_amount())+ "  " + currency);
         }
     }
+
+
+    /**
+     * Showing popup menu when tapping on 3 dots
+     */
+    private void showPopupMenu(View view) {
+        // inflate menu
+        PopupMenu popup = new PopupMenu(context, view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.slider_menu, popup.getMenu());
+        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(this.orderItemClickListener));
+        popup.show();
+    }
+
+    /**
+     * Click listener for popup menu items
+     */
+    class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
+        private OrderItemClickListener orderItemClickListener;
+        public MyMenuItemClickListener(OrderItemClickListener orderItemClickListener) {
+            this.orderItemClickListener = orderItemClickListener;
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+                case R.id.action_details:
+                    orderItemClickListener.showOrderDetails(getOrder());
+                    return true;
+                case R.id.action_location:
+                    orderItemClickListener.showOrderLocation(getOrder());
+                    return true;
+                default:
+            }
+            return false;
+        }
+    }
+
+    public void setOrder(Order order){  this.order = order; }
+    public Order getOrder(){ return  this.order; }
 }
