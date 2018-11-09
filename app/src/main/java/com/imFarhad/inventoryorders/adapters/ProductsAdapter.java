@@ -78,11 +78,10 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
             productTotalPrice.setText(String.valueOf(totalPrice));
             productTotalPrice.append(currency);
             productDescription.setText(product.getDescription());
-
-//            String base64Image = product.getImage().split(",")[1];
-//            byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
-//            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-//            productImage.setImageBitmap(decodedByte);
+            String base64Image = product.getImage().split(",")[1];
+            byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            productImage.setImageBitmap(decodedByte);
         }
     }
 

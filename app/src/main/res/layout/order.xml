@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/view_foreground"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:padding="@dimen/activity_vertical_margin"
+    android:layout_marginStart="@dimen/product_price_margin"
+    android:layout_marginLeft="@dimen/product_price_margin"
+    android:layout_marginEnd="@dimen/product_price_margin"
+    android:layout_marginRight="@dimen/product_price_margin"
+    android:layout_marginTop="@dimen/product_price_margin">
+
+    <ImageView
+        android:id="@+id/productImage"
+        android:layout_width="@dimen/cart_thumbnail"
+        android:layout_height="@dimen/cart_thumbnail"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:src="@drawable/ic_shopping_cart"
+        android:layout_centerVertical="true"/>
+
+    <TextView
+        android:id="@+id/productName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-medium"
+        android:maxLines="1"
+        android:textSize="@dimen/text_size_medium"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_toRightOf="@id/productImage"
+        android:layout_toEndOf="@id/productImage"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2"
+        android:orientation="vertical"
+        android:id="@+id/price_layout"
+        android:layout_toRightOf="@id/productImage"
+        android:layout_toEndOf="@id/productImage"
+        android:layout_below="@id/productName">
+
+        <TextView
+            android:id="@+id/productUnitPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:text="Unit Price: "
+            android:textSize="@dimen/badge_text_size"
+            android:textColor="@color/red"/>
+
+        <TextView
+            android:id="@+id/productQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/red"
+            android:text="Amount: "
+            android:textSize="@dimen/badge_text_size"/>
+
+        <TextView
+            android:id="@+id/productSubTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:text="Total: "
+            android:textSize="@dimen/badge_text_size"
+            android:textColor="@color/red"/>
+
+
+
+    </LinearLayout>
+
+
+
+
+    <TextView
+        android:id="@+id/productDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/price_layout"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/productImage"
+        android:layout_toEndOf="@id/productImage"
+        android:textSize="@dimen/badge_text_size"
+        android:textColor="@color/description"/>
+
+
+</RelativeLayout>

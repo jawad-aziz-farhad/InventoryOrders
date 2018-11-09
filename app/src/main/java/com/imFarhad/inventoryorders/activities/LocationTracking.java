@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -31,7 +30,6 @@ import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
 
-import java.security.Permission;
 import java.util.LinkedHashMap;
 
 public class LocationTracking extends AppCompatActivity {
@@ -140,7 +138,6 @@ public class LocationTracking extends AppCompatActivity {
     }
 
     private LinkedHashMap<String, String> getNewLocationMessage(double lat, double lng) {
-        Log.w(TAG, "LATITUDE: " +  String.valueOf(lat) + " LONGITUDE: " +  String.valueOf(lng));
         LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
         map.put("lat", String.valueOf(lat));
         map.put("lng", String.valueOf(lng));

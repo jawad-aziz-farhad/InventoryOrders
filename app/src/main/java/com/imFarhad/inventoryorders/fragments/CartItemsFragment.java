@@ -64,24 +64,14 @@ public class CartItemsFragment extends Fragment implements ItemTouchListener{
         checkOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Bundle bundle = new Bundle();
-//                bundle.putParcelableArrayList("cartItems", cartItems);
-//                Fragment fragment = new PaymentFragment();
-//                fragment.setArguments(bundle);
-//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContent, fragment).commit();
-
                 StripePayment stripePayment = new StripePayment(getActivity(), cartItems);
                 stripePayment.OpenDialog();
-
-
-
             }
         });
 
         stripe = new Stripe(getActivity(), AppConfig.STRIPE_KEY);
 
-        recyclerViewLayout = (RelativeLayout)view.findViewById(R.id.recycler_view_layout);
+        //recyclerViewLayout = (RelativeLayout)view.findViewById(R.id.recycler_view_layout);
         RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);
 
         cartItems = new ArrayList<>();

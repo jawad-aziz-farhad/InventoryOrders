@@ -98,8 +98,6 @@ public class Login extends Fragment {
             Toast.makeText(getActivity(), getString(R.string.internet_error_msg),Toast.LENGTH_LONG).show();
     }
 
-
-
     //TODO: LOGGIN IN TO THE APP
     public void login() {
         showDialog();
@@ -119,6 +117,7 @@ public class Login extends Fragment {
                     hideDialog();
                     if(response.has("user") ) {
                         JSONArray user = response.getJSONArray("user");
+                        Log.w(TAG, user.toString());
                         sessionManager.setUpUser(user.getJSONObject(0));
                         //NotificationUtils notificationUtils = new NotificationUtils(getActivity());
                         //notificationUtils.sendTokenToServer(new Preferences(getActivity()).getFCMToken());

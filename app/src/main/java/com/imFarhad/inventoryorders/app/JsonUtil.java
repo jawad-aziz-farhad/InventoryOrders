@@ -12,10 +12,9 @@ import java.util.Map;
 public class JsonUtil {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static  <T> T fromJson(byte[] value, Class<T> clas) throws Exception {
+    public static <T> T fromJson(byte[] value, Class<T> clas) throws Exception {
         return objectMapper.readValue(value, clas);
     }
-
     public static <T> T fromJson(String value, Class<T> clas) throws Exception {
         return objectMapper.readValue(value, clas);
     }

@@ -66,14 +66,14 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         viewHolder.categoryImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onCategoryItemClickListener(category);
+             listener.onCategoryItemClickListener(category);
             }
         });
 
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onCategoryItemClickListener(category);
+             listener.onCategoryItemClickListener(category);
             }
         });
     }

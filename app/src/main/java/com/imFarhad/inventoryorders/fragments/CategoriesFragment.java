@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
@@ -116,6 +117,7 @@ public class CategoriesFragment extends Fragment {
             public void onError(String requestType, VolleyError error) {
                 hideDialog();
                 Log.e(TAG, "CATEGORIES ERROR " + error.toString());
+                Toast.makeText(getActivity(), getString(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
         };
         VolleyService volleyService = new VolleyService(iResult, getActivity());

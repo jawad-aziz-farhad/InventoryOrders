@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/splash"
-    tools:context="com.imFarhad.inventoryorders.activities.Splash">
+    tools:context=".activities.AssignedDeliveries">
 
 </android.support.constraint.ConstraintLayout>

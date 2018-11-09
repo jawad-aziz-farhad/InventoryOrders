@@ -5,16 +5,15 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
@@ -36,11 +35,12 @@ import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
+
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ShowLocation extends AppCompatActivity implements OnMapReadyCallback{
+public class ShowLocation extends AppCompatActivity implements OnMapReadyCallback {
 
     private SupportMapFragment supportMapFragment;
     private GoogleMap google_Map;
@@ -52,22 +52,18 @@ public class ShowLocation extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_show_location);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.content_show_location);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         supportMapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
 
-        checkPermissions();
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M)
+            checkPermissions();
+        else
+            initPubNub();
     }
 
     //TODO: CHECKING PERMISSION
@@ -89,7 +85,6 @@ public class ShowLocation extends AppCompatActivity implements OnMapReadyCallbac
         pnConfiguration.setPublishKey(AppConfig.PUBNUB_PUBLISHKEY);
         pnConfiguration.setSecure(true);
         pubNub = new PubNub(pnConfiguration);
-        subscribeLocationChannel();
     }
 
     @Override
@@ -108,7 +103,7 @@ public class ShowLocation extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     //TODO: LISTENING TO UPDATED LOCATION BY SUBSCRIBING CHANNEL
-    private void subscribeLocationChannel(){
+    private void subscribeLocationChannel() {
         pubNub.addListener(new SubscribeCallback() {
             @Override
             public void status(PubNub pubnub, PNStatus status) {
@@ -153,11 +148,12 @@ public class ShowLocation extends AppCompatActivity implements OnMapReadyCallbac
         }
         else {
             google_Map.animateCamera(CameraUpdateFactory.newLatLngZoom(newLocation, 15.5f));
-            marker = google_Map.addMarker(new MarkerOptions().position(newLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_on_black_24dp)));
+            marker = google_Map.addMarker(new MarkerOptions().position(newLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.car)));
         }
 
     }
 
+    //TODO: ANIMATING ICON ACCORING TO THE LOCATION
     private void animateIcon(final LatLng location){
         final LatLng startPosition = marker.getPosition();
         final LatLng endPosition   = new LatLng(location.latitude, location.longitude);
@@ -221,7 +217,7 @@ public class ShowLocation extends AppCompatActivity implements OnMapReadyCallbac
         } catch (SecurityException e) {
             e.printStackTrace();
         }
+
+        subscribeLocationChannel();
     }
-
-
 }

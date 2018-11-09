@@ -26,6 +26,7 @@ public class SessionManager {
     private static final String TOKEN = "token";
     public static final String NAME  = "name";
     public static final String EMAIL = "email";
+    public static final String TYPE  = "user_type";
     public static final String  ID = "";
     public static final String ADDRESS = "address";
     public static final String PROFILE_IMAGE = "profile_image";
@@ -44,6 +45,7 @@ public class SessionManager {
             editor.putString(EMAIL, user.getString("email"));
             editor.putBoolean(IS_LOGGED_IN_KEY, true);
             editor.putInt(ID , user.getInt("id"));
+            editor.putString(TYPE, user.getString("type"));
             //editor.putString(ADDRESS, user.getString("address"));
             //editor.putString(PROFILE_IMAGE, user.getString("address"));
 
@@ -57,6 +59,7 @@ public class SessionManager {
         Map<String, String> user = new HashMap<String, String>();
         user.put(NAME, sharedPreferences.getString(NAME, null));
         user.put(EMAIL, sharedPreferences.getString(EMAIL, null));
+        user.put(TYPE, sharedPreferences.getString(TYPE, null));
         //user.put(ADDRESS, sharedPreferences.getString(ADDRESS, null));
         //user.put(PROFILE_IMAGE, sharedPreferences.getString(PROFILE_IMAGE, null));
         return user;
@@ -71,6 +74,8 @@ public class SessionManager {
     public String getEmail(){ return sharedPreferences.getString(EMAIL,null);}
     //TODO: GETTING ID
     public int getId(){ return sharedPreferences.getInt(ID,0);}
+    //TODO: GETTING USER TYPE (SHOP KEEPER OR SALE)
+    public String getType(){ return sharedPreferences.getString(TYPE,null);}
 
 
     //TODO: CLEARING PREFERENCES
