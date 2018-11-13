@@ -13,6 +13,7 @@ public class AppConfig {
     public static final String PRODUCTS_URL = SERVER_URL + "products/category/";
     public static final String ORDER_SUBMIT_URL = SERVER_URL + "order/submit";
     public static final String ORDERS_URL = SERVER_URL + "order/user/";
+    public static final String SALEMAN_ORDERS_URL = SERVER_URL + "";
     public static final String SAVING_TOKEN_URL = SERVER_URL + "";
     public static final String REGISTRATION_COMPLETE = "registrationComplete";
     public static final String PUSH_NOTIFICATION = "pushNotification";

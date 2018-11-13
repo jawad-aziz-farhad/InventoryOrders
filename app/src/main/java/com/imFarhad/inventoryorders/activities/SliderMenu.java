@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.TextView;
 import com.imFarhad.inventoryorders.R;
 import com.imFarhad.inventoryorders.app.SessionManager;
+import com.imFarhad.inventoryorders.fragments.AssignedFragment;
 import com.imFarhad.inventoryorders.fragments.CategoriesFragment;
 import com.imFarhad.inventoryorders.fragments.OrdersFragment;
 import com.imFarhad.inventoryorders.fragments.ProfileFragment;
@@ -48,7 +49,12 @@ public class SliderMenu extends AppCompatActivity {
 
         sessionManager = new SessionManager(SliderMenu.this);
 
-        Fragment fragment = new CategoriesFragment();
+        Fragment fragment = null;
+        if(sessionManager.getType().equals("shopkeeper"))
+            fragment = new CategoriesFragment();
+        else
+            fragment = new AssignedFragment();
+
         fragment.setArguments(getIntent().getExtras());
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
@@ -88,16 +94,16 @@ public class SliderMenu extends AppCompatActivity {
             menu.findItem(R.id.nav_orders).setVisible(false);
         }
     }
-
     //TODO: CONFIGURING THE ACTION WHEN EACH DRAWER ITEM CLICKED
     public void selectDrawerItem(MenuItem menuItem) {
         switch(menuItem.getItemId()) {
             case R.id.nav_home:
-                fragmentTransaction(new CategoriesFragment() , menuItem);
+                //fragmentTransaction(new CategoriesFragment() , menuItem);
+                if(sessionManager.getType().equals("shopkeeper"))
+                    fragmentTransaction(new CategoriesFragment() , menuItem);
+                else
+                    fragmentTransaction(new AssignedFragment() , menuItem);
                 break;
-//            case R.id.nav_manage:
-//                fragmentTransaction(new SettingsFragment() , menuItem);
-//                break;
             case R.id.nav_profile:
                 fragmentTransaction(new ProfileFragment() , menuItem);
                 break;
