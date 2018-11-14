@@ -29,12 +29,14 @@ import com.imFarhad.inventoryorders.interfaces.OrderItemClickListener;
 import com.imFarhad.inventoryorders.interfaces._IResult;
 import com.imFarhad.inventoryorders.models.Order;
 import com.imFarhad.inventoryorders.models.OrderDetails;
+import com.imFarhad.inventoryorders.models.OrderModel;
 import com.imFarhad.inventoryorders.services.VolleyService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -101,6 +103,7 @@ public class OrdersFragment extends Fragment {
         _IResult iResult = new _IResult() {
             @Override
             public void onSuccess(String requestType, JSONArray response) {
+                Log.w(TAG, response.toString());
                 hideDialog();
                 if(response.length() == 0){
                     Toast.makeText(getActivity(), "No Order Found.",Toast.LENGTH_LONG).show();
@@ -140,6 +143,66 @@ public class OrdersFragment extends Fragment {
         Log.w(TAG, uri);
         VolleyService volleyService = new VolleyService(iResult , getActivity());
         volleyService._getRequest(uri , "GET");
+    }
+
+    public void extractingData(JSONObject object){
+        try{
+            JSONArray orders = object.getJSONArray("orders");
+            if(orders.length() == 0){
+                return;
+            }
+            else{
+
+                ArrayList<OrderModel> allOrders = new ArrayList<>();
+                ArrayList<OrderDetails> orderDetailsArray = new ArrayList<>();
+
+                for(int i=0; i<orders.length(); i++){
+
+                    JSONObject jsonObject = orders.getJSONObject(i).getJSONArray("data").getJSONObject(0);
+                    OrderDetails order_Details = new OrderDetails();
+                    order_Details.setId(jsonObject.getInt("id"));
+                    order_Details.setProduct_id(jsonObject.getInt("product_id"));
+                    order_Details.setOrder_id(jsonObject.getInt("order_id"));
+                    order_Details.setUnit_price(Integer.parseInt(jsonObject.getString("unit_price")));
+                    order_Details.setAmount(Integer.parseInt(jsonObject.getString("amount")));
+                    order_Details.setQuantity(jsonObject.getInt("quantity"));
+                    order_Details.setCreated_at(jsonObject.getString("created_at"));
+                    order_Details.setUpdated_at(jsonObject.getString("updated_at"));
+                    order_Details.setUser_id(jsonObject.getInt("user_id"));
+                    order_Details.setSaleman_id(jsonObject.getInt("saleman_id"));
+                    order_Details.setStatus(jsonObject.getInt("status"));
+
+
+                    OrderModel orderModel = new OrderModel();
+
+                    if(orderDetailsArray.size() > 0){
+
+                        int size = orderDetailsArray.size();
+                        OrderDetails order_details = orderDetailsArray.get(size - 1);
+
+                        if(order_details.getOrder_id() == order_Details.getOrder_id()){
+                            orderDetailsArray.add(order_details);
+                        }
+                        else{
+
+                            orderModel.setStatus(order_details.getStatus());
+                            orderModel.setOrderDetails(orderDetailsArray);
+                            allOrders.add(orderModel);
+
+                            orderDetailsArray = new ArrayList<>();
+                            orderDetailsArray.add(order_details);
+                        }
+                    }
+
+                    else {
+                        int size = orderDetailsArray.size();
+                        OrderDetails order_details = orderDetailsArray.get(size - 1);
+                        orderDetailsArray.add(order_details);
+                    }
+                }
+
+            }
+        }catch (JSONException e){e.printStackTrace();;}
     }
 
     //TODO: SHOWING PROGRESS DIALOG

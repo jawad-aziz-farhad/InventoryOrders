@@ -13,18 +13,51 @@ public class OrderDetails implements Parcelable {
     private int amount;
     private String created_at;
     private String updated_at;
+    private int user_id;
+    private int saleman_id;
+    private int status;
 
     public OrderDetails() {}
 
+
+
     public OrderDetails(Parcel parcel){
-        id = parcel.readInt();;
-        order_id = parcel.readInt();;
-        product_id = parcel.readInt();;
-        quantity = parcel.readInt();;
-        unit_price = parcel.readInt();;
-        amount = parcel.readInt();;
-        created_at = parcel.readString();;
-        updated_at = parcel.readString();;
+        id = parcel.readInt();
+        order_id = parcel.readInt();
+
+        product_id = parcel.readInt();
+        quantity = parcel.readInt();
+        unit_price = parcel.readInt();
+        amount = parcel.readInt();
+        created_at = parcel.readString();
+        updated_at = parcel.readString();
+        user_id = parcel.readInt();
+        saleman_id = parcel.readInt();
+        status = parcel.readInt();
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
+    public int getSaleman_id() {
+        return saleman_id;
+    }
+
+    public void setSaleman_id(int saleman_id) {
+        this.saleman_id = saleman_id;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public int getId() {
@@ -106,10 +139,12 @@ public class OrderDetails implements Parcelable {
         parcel.writeInt(amount);
         parcel.writeString(created_at);
         parcel.writeString(updated_at);
+        parcel.writeInt(status);
+        parcel.writeInt(user_id);
+        parcel.writeInt(saleman_id);
     }
 
     public static final Parcelable.Creator<OrderDetails> CREATOR = new Parcelable.Creator<OrderDetails>(){
-
         @Override
         public OrderDetails createFromParcel(Parcel parcel) {
             return new OrderDetails(parcel);
