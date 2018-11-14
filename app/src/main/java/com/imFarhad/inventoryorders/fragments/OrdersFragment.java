@@ -1,7 +1,6 @@
 package com.imFarhad.inventoryorders.fragments;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,19 +13,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-import com.google.gson.Gson;
 import com.imFarhad.inventoryorders.R;
-import com.imFarhad.inventoryorders.activities.ShowLocation;
 import com.imFarhad.inventoryorders.adapters.OrdersAdapter;
 import com.imFarhad.inventoryorders.app.AppConfig;
 import com.imFarhad.inventoryorders.app.AppController;
 import com.imFarhad.inventoryorders.app.SessionManager;
+import com.imFarhad.inventoryorders.interfaces.IResult;
 import com.imFarhad.inventoryorders.interfaces.OrderItemClickListener;
-import com.imFarhad.inventoryorders.interfaces._IResult;
 import com.imFarhad.inventoryorders.models.Order;
 import com.imFarhad.inventoryorders.models.OrderDetails;
 import com.imFarhad.inventoryorders.models.OrderModel;
@@ -36,10 +32,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Farhad on 12/10/2018.
@@ -53,16 +46,15 @@ public class OrdersFragment extends Fragment {
     private RecyclerView recyclerView;
     private OrdersAdapter ordersAdapter;
     private JSONArray ordersResponse ;
-
+    private OrderItemClickListener orderItemClickListener;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recycler_view, container, false);
         progressDialog = new ProgressDialog(getActivity());
-        //orders = new ArrayList<>();
         recyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);
         progressDialog = new ProgressDialog(getActivity());
-        OrderItemClickListener orderItemClickListener = new OrderItemClickListener() {
+        orderItemClickListener = new OrderItemClickListener() {
             @Override
             public void OnItemClick(Order order) {
                 showDetails(order);
@@ -77,22 +69,9 @@ public class OrdersFragment extends Fragment {
             }
         };
 
-        if (savedInstanceState == null){
-            Log.w(TAG, "SAVED INSTANCE STATE IS NULL.");
-            orders = new ArrayList<>();
-        }else{
-            Log.w(TAG, "SAVED INSTANCE STATE IS NOT NULL.");
-            orders = savedInstanceState.getParcelableArrayList("orders");
-        }
+        orders = new ArrayList<>();
 
-        ordersAdapter = new OrdersAdapter(getActivity(), this.orders , orderItemClickListener);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(AppController.getDividerItemDecoration());
-        recyclerView.setAdapter(ordersAdapter);
-        if (savedInstanceState == null)
-            getOrders();
+        getOrders();
         return view;
     }
 
@@ -100,35 +79,16 @@ public class OrdersFragment extends Fragment {
     private void getOrders(){
         showDialog();
         //CALLBACK FOR ORDERS RESPONSE
-        _IResult iResult = new _IResult() {
+        IResult iResult = new IResult() {
             @Override
-            public void onSuccess(String requestType, JSONArray response) {
+            public void onSuccess(String requestType, JSONObject response) {
                 Log.w(TAG, response.toString());
                 hideDialog();
                 if(response.length() == 0){
                     Toast.makeText(getActivity(), "No Order Found.",Toast.LENGTH_LONG).show();
                     return;
                 }
-                try {
-                      ordersResponse = response;
-
-                      for(int i=0; i<response.length();i++) {
-                          JSONArray orderdata = response.getJSONArray(i);
-                          int totalAmount = 0;
-                          for(int j=0; j<orderdata.length();j++){
-                             JSONObject item = orderdata.getJSONObject(j);
-                             totalAmount += Integer.parseInt(item.getString("amount"));
-                          }
-                          Order order = new Order();
-                          order.setOrder_id(i);
-                          order.setOrder_name("Order Num " + (i + 1));
-                          order.setTotal_amount(totalAmount);
-                          order.setPaid_amount(totalAmount/2);
-                          orders.add(order);
-                      }
-                }catch (JSONException e){ e.printStackTrace();}
-
-                ordersAdapter.notifyDataSetChanged();
+                extractingData(response);
             }
             @Override
             public void onError(String requestType, VolleyError error) {
@@ -142,7 +102,7 @@ public class OrdersFragment extends Fragment {
         String uri = AppConfig.ORDERS_URL + user_id;
         Log.w(TAG, uri);
         VolleyService volleyService = new VolleyService(iResult , getActivity());
-        volleyService._getRequest(uri , "GET");
+        volleyService.getRequest(uri , "GET", null);
     }
 
     public void extractingData(JSONObject object){
@@ -152,13 +112,12 @@ public class OrdersFragment extends Fragment {
                 return;
             }
             else{
-
                 ArrayList<OrderModel> allOrders = new ArrayList<>();
                 ArrayList<OrderDetails> orderDetailsArray = new ArrayList<>();
 
                 for(int i=0; i<orders.length(); i++){
-
                     JSONObject jsonObject = orders.getJSONObject(i).getJSONArray("data").getJSONObject(0);
+                    //Log.w(TAG, "Value at "+ i + " is " + jsonObject.getInt("product_id"));
                     OrderDetails order_Details = new OrderDetails();
                     order_Details.setId(jsonObject.getInt("id"));
                     order_Details.setProduct_id(jsonObject.getInt("product_id"));
@@ -172,37 +131,68 @@ public class OrdersFragment extends Fragment {
                     order_Details.setSaleman_id(jsonObject.getInt("saleman_id"));
                     order_Details.setStatus(jsonObject.getInt("status"));
 
-
                     OrderModel orderModel = new OrderModel();
 
                     if(orderDetailsArray.size() > 0){
-
                         int size = orderDetailsArray.size();
                         OrderDetails order_details = orderDetailsArray.get(size - 1);
 
                         if(order_details.getOrder_id() == order_Details.getOrder_id()){
-                            orderDetailsArray.add(order_details);
+                            orderDetailsArray.add(order_Details);
+                            if(i == (orders.length() - 1)){
+                                orderModel.setStatus(order_Details.getStatus());
+                                orderModel.setOrderDetails(orderDetailsArray);
+                                allOrders.add(orderModel);
+                            }
                         }
                         else{
-
                             orderModel.setStatus(order_details.getStatus());
                             orderModel.setOrderDetails(orderDetailsArray);
                             allOrders.add(orderModel);
 
                             orderDetailsArray = new ArrayList<>();
-                            orderDetailsArray.add(order_details);
+                            orderDetailsArray.add(order_Details);
                         }
                     }
 
                     else {
-                        int size = orderDetailsArray.size();
-                        OrderDetails order_details = orderDetailsArray.get(size - 1);
-                        orderDetailsArray.add(order_details);
+                        orderDetailsArray.add(order_Details);
+                        if(orders.length() == 1){
+                            orderModel.setStatus(order_Details.getStatus());
+                            orderModel.setOrderDetails(orderDetailsArray);
+                            allOrders.add(orderModel);
+                        }
                     }
                 }
 
+                Log.w("ALL Orders Size", String.valueOf(allOrders.size()));
+                this.orders = new ArrayList<>();
+                for(int i=0; i<allOrders.size(); i++){
+                    OrderModel orderModel = allOrders.get(i);
+                    if(orderModel.getOrderDetails().size() > 0) {
+                        int amount = 0;
+                        for (int j = 0; j < orderModel.getOrderDetails().size(); j++) {
+                            OrderDetails orderDetails = orderModel.getOrderDetails().get(j);
+                            amount += orderDetails.getAmount();
+                        }
+                        Order order = new Order();
+                        order.setOrder_id(orderModel.getOrderDetails().get(0).getOrder_id());
+                        order.setTotal_amount(amount);
+                        order.setPaid_amount(amount/2);
+                        order.setOrder_name("Order Name: " + (i+ 1));
+                        this.orders.add(order);
+                    }
+                }
+
+                ordersAdapter = new OrdersAdapter(getActivity(), this.orders , orderItemClickListener);
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.addItemDecoration(AppController.getDividerItemDecoration());
+                recyclerView.setAdapter(ordersAdapter);
+
             }
-        }catch (JSONException e){e.printStackTrace();;}
+        }catch (JSONException e){e.printStackTrace();}
     }
 
     //TODO: SHOWING PROGRESS DIALOG

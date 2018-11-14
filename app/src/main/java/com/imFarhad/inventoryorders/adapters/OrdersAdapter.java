@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -42,6 +43,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull OrdersAdapter.ViewHolder viewHolder, int i) {
         final Order order = orders.get(i);
+        Log.w("Orders Adapter", order.getOrder_name());
         viewHolder.bind(order, orderItemClickListener);
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
