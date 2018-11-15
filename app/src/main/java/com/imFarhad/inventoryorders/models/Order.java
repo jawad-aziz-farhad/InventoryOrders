@@ -3,12 +3,16 @@ package com.imFarhad.inventoryorders.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 public class Order implements Parcelable {
 
     private int order_id;
     private String order_name;
     private int paid_amount;
     private int total_amount;
+    private int status;
+    private ArrayList<OrderDetails> orderDetailsArrayList;
 
     public Order() {}
 
@@ -49,6 +53,22 @@ public class Order implements Parcelable {
 
     public void setTotal_amount(int total_amount) {
         this.total_amount = total_amount;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public ArrayList<OrderDetails> getOrderDetailsArrayList() {
+        return orderDetailsArrayList;
+    }
+
+    public void setOrderDetailsArrayList(ArrayList<OrderDetails> orderDetailsArrayList) {
+        this.orderDetailsArrayList = orderDetailsArrayList;
     }
 
     @Override

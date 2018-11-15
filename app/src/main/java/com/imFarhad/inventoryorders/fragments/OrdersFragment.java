@@ -117,7 +117,6 @@ public class OrdersFragment extends Fragment {
 
                 for(int i=0; i<orders.length(); i++){
                     JSONObject jsonObject = orders.getJSONObject(i).getJSONArray("data").getJSONObject(0);
-                    //Log.w(TAG, "Value at "+ i + " is " + jsonObject.getInt("product_id"));
                     OrderDetails order_Details = new OrderDetails();
                     order_Details.setId(jsonObject.getInt("id"));
                     order_Details.setProduct_id(jsonObject.getInt("product_id"));
@@ -165,9 +164,9 @@ public class OrdersFragment extends Fragment {
                     }
                 }
 
-                Log.w("ALL Orders Size", String.valueOf(allOrders.size()));
                 this.orders = new ArrayList<>();
-                for(int i=0; i<allOrders.size(); i++){
+
+                for(int i=0; i<allOrders.size(); i++) {
                     OrderModel orderModel = allOrders.get(i);
                     if(orderModel.getOrderDetails().size() > 0) {
                         int amount = 0;
@@ -177,13 +176,15 @@ public class OrdersFragment extends Fragment {
                         }
                         Order order = new Order();
                         order.setOrder_id(orderModel.getOrderDetails().get(0).getOrder_id());
+                        order.setStatus(orderModel.getOrderDetails().get(0).getStatus());
                         order.setTotal_amount(amount);
                         order.setPaid_amount(amount/2);
-                        order.setOrder_name("Order Name: " + (i+ 1));
+                        order.setOrder_name("Order Num: " + (i+ 1));
+                        order.setOrderDetailsArrayList(orderModel.getOrderDetails());
+
                         this.orders.add(order);
                     }
                 }
-
                 ordersAdapter = new OrdersAdapter(getActivity(), this.orders , orderItemClickListener);
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
                 recyclerView.setLayoutManager(layoutManager);
@@ -208,37 +209,17 @@ public class OrdersFragment extends Fragment {
     }
 
     //TODO: SHOWING SELECTED ORDER'S DETAILS
-    private void showDetails(Order order){
-        try {
-            JSONArray orderDetails = ordersResponse.getJSONArray(order.getOrder_id());
-            if(orderDetails.length() == 0){
-                Toast.makeText(getActivity(), "NO DETAILS FOUND", Toast.LENGTH_LONG).show();
-                return;
-            }
-            ArrayList<OrderDetails> selectedOrder = new ArrayList<>();
-            for(int i=0; i<orderDetails.length(); i++){
-                JSONObject jsonObject = orderDetails.getJSONObject(i);
-                OrderDetails order_Details = new OrderDetails();
-                order_Details.setId(jsonObject.getInt("id"));
-                order_Details.setProduct_id(jsonObject.getInt("product_id"));
-                order_Details.setOrder_id(jsonObject.getInt("order_id"));
-                order_Details.setUnit_price(Integer.parseInt(jsonObject.getString("unit_price")));
-                order_Details.setAmount(Integer.parseInt(jsonObject.getString("amount")));
-                order_Details.setQuantity(jsonObject.getInt("quantity"));
-                order_Details.setCreated_at(jsonObject.getString("created_at"));
-                order_Details.setUpdated_at(jsonObject.getString("updated_at"));
-                selectedOrder.add(order_Details);
-            }
-
-            if(selectedOrder.size() > 0){
-                Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList("selectedOrder", selectedOrder);
-                Fragment fragment = new OrderDetailsFragment();
-                fragment.setArguments(bundle);
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContent, fragment).commit();
-            }
-        }catch (JSONException e){ e.printStackTrace();}
+    private void showDetails(Order order) {
+        ArrayList<OrderDetails> selectedOrder = new ArrayList<>();
+        selectedOrder = order.getOrderDetailsArrayList();
+        if(selectedOrder.size() > 0){
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList("selectedOrder", selectedOrder);
+            Fragment fragment = new OrderDetailsFragment();
+            fragment.setArguments(bundle);
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.flContent, fragment).commit();
+        }
     }
 
 }

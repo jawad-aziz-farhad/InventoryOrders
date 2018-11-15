@@ -6,6 +6,7 @@
     <color name="red">#ff0000</color>
     <color name="gray">	#E0E0E0</color>
     <color name="divider">#FFFFFF</color>
+    <color name="green">#c1f0c1</color>
     <color name="viewBg">#f1f5f8</color>
     <color name="title">#4c4c4c</color>
     <color name="description">#a9a9a9</color>

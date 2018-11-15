@@ -61,7 +61,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             productTotalPrice  = (TextView) itemView.findViewById(R.id.productSubTotal);
             productDescription = (TextView) itemView.findViewById(R.id.productDescription);
             productImage       = (ImageView)itemView.findViewById(R.id.productImage);
-            productQuantity      = (TextView) itemView.findViewById(R.id.productQuantity);
+            productQuantity    = (TextView) itemView.findViewById(R.id.productQuantity);
         }
 
         public void bind(final OrderDetails orderDetails) {

@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
             android:textColor="@color/red"
-            android:text="Amount: "
+            android:text="Quantity: "
             android:textSize="@dimen/badge_text_size"/>
 
         <TextView

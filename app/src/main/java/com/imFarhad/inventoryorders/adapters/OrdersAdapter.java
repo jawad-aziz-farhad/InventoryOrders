@@ -43,7 +43,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull OrdersAdapter.ViewHolder viewHolder, int i) {
         final Order order = orders.get(i);
-        Log.w("Orders Adapter", order.getOrder_name());
+        if(order.getStatus() == 5) {
+            viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.green));
+            viewHolder.overFlow.setVisibility(View.GONE);
+        }
         viewHolder.bind(order, orderItemClickListener);
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
