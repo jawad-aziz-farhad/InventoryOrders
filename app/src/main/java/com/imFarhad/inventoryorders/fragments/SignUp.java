@@ -31,6 +31,7 @@ import com.imFarhad.inventoryorders.app.SessionManager;
 import com.imFarhad.inventoryorders.interfaces.IResult;
 import com.imFarhad.inventoryorders.services.VolleyService;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -66,12 +67,13 @@ public class SignUp extends Fragment {
         sessionManager = new SessionManager(getActivity());
         progressDialog = new ProgressDialog(getActivity());
 
-        mErrorView = (TextView)view.findViewById(R.id.errorView);
+        mErrorView     = (TextView)view.findViewById(R.id.errorView);
         mUserTypeGroup = (RadioGroup)view.findViewById(R.id.login_userType);
-        mNameView = (EditText)view.findViewById(R.id.name);
-        mEmailView = (AutoCompleteTextView)view. findViewById(R.id.email);
-        mPasswordView = (EditText)view. findViewById(R.id.password);
-        mImageView = (ImageView)view.findViewById(R.id.signUpImage);
+        mNameView      = (EditText)view.findViewById(R.id.name);
+        mEmailView     = (AutoCompleteTextView)view. findViewById(R.id.email);
+        mPasswordView  = (EditText)view. findViewById(R.id.password);
+        mImageView     = (ImageView)view.findViewById(R.id.signUpImage);
+
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -135,10 +137,14 @@ public class SignUp extends Fragment {
             @Override
             public void onSuccess(String requestType, JSONObject response) {
                 Log.d(TAG,"Response: "+ response.toString());
-                sessionManager.setUpUser(response);
+                try {
+                    if (response.has("saleman"))
+                        sessionManager.setUpUser(response.getJSONObject("saleman"));
+                    else
+                        sessionManager.setUpUser(response);
+                }
+                catch (JSONException e){e.printStackTrace();}
                 hideDialog();
-                //NotificationUtils notificationUtils = new NotificationUtils(getActivity());
-                //notificationUtils.sendTokenToServer(new Preferences(getActivity()).getFCMToken());
                 startActivity(new Intent(getActivity(), SliderMenu.class));
                 getActivity().finish();
             }
