@@ -210,14 +210,12 @@ public class ShowLocation extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         try {
             google_Map = googleMap;
             google_Map.setMyLocationEnabled(true);
         } catch (SecurityException e) {
             e.printStackTrace();
         }
-
         subscribeLocationChannel();
     }
 }

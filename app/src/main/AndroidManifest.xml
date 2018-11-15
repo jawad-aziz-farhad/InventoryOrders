@@ -34,7 +34,6 @@
             android:label="@string/title_activity_slider_menu"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.NetworkErrorActivity" />
-        <activity android:name=".activities.ProductDetails" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -46,16 +45,16 @@
         <activity
             android:name=".activities.LocationTracking"
             android:label="@string/title_activity_location_tracking"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activities.ShowLocation"
             android:label="@string/title_activity_show_location"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activities.MapsActivity"
             android:label="@string/title_activity_maps">
+
         </activity>
-        <activity android:name=".activities.AssignedDeliveries"/>
     </application>
 
 </manifest>

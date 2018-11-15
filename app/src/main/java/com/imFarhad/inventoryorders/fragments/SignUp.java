@@ -16,28 +16,21 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.imFarhad.inventoryorders.R;
 import com.imFarhad.inventoryorders.activities.LoginActivity;
 import com.imFarhad.inventoryorders.activities.SliderMenu;
 import com.imFarhad.inventoryorders.app.AppConfig;
 import com.imFarhad.inventoryorders.app.Connectivity;
-import com.imFarhad.inventoryorders.app.NotificationUtils;
-import com.imFarhad.inventoryorders.app.Preferences;
 import com.imFarhad.inventoryorders.app.SessionManager;
 import com.imFarhad.inventoryorders.interfaces.IResult;
 import com.imFarhad.inventoryorders.services.VolleyService;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -60,6 +53,8 @@ public class SignUp extends Fragment {
     private SessionManager sessionManager;
     private static final String TAG = LoginActivity.class.getSimpleName();
     private ProgressDialog progressDialog;
+    private RadioGroup mUserTypeGroup;
+    private String userType = "shopkeeper";
     private static final int IMAGE_PICKER_CODE = 100;
 
     @Nullable
@@ -71,9 +66,8 @@ public class SignUp extends Fragment {
         sessionManager = new SessionManager(getActivity());
         progressDialog = new ProgressDialog(getActivity());
 
-
         mErrorView = (TextView)view.findViewById(R.id.errorView);
-
+        mUserTypeGroup = (RadioGroup)view.findViewById(R.id.login_userType);
         mNameView = (EditText)view.findViewById(R.id.name);
         mEmailView = (AutoCompleteTextView)view. findViewById(R.id.email);
         mPasswordView = (EditText)view. findViewById(R.id.password);
@@ -90,6 +84,14 @@ public class SignUp extends Fragment {
             @Override
             public void onClick(View view) {
                 attemptSignUp();
+            }
+        });
+
+        mUserTypeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                RadioButton checkedRadioButton = (RadioButton)radioGroup.findViewById(checkedId);
+                userType = checkedRadioButton.getText().toString();
             }
         });
 
@@ -155,9 +157,13 @@ public class SignUp extends Fragment {
                 }, 3000);
             }
         };
-
+        String SignUpUrl = null;
+        if(userType == "shopkeeper")
+            SignUpUrl = AppConfig.SIGNUP_URL;
+        else
+            SignUpUrl = AppConfig.SALEMAN_SIGNUP_URL;
         VolleyService volleyService = new VolleyService(iResult , getActivity());
-        volleyService.postRequest(AppConfig.SIGNUP_URL, "POST" , new JSONObject(params));
+        volleyService.postRequest(SignUpUrl, "POST" , new JSONObject(params));
 
     }
 

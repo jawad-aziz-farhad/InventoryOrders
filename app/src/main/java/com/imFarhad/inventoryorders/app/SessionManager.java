@@ -39,13 +39,25 @@ public class SessionManager {
     public void setUpUser(JSONObject user){
         try {
             editor = sharedPreferences.edit();
-            String name = user.getString("name");
-            editor.putString(TOKEN, user.getString("app_token"));
+            String name = null;
+            if(user.has("name"))
+                name = user.getString("name");
+            else {
+                name = user.getString("firstName") + " " + user.getString("lastName");
+                editor.putString(TYPE, "saleman");
+            }
             editor.putString(NAME, name);
+
+            if(user.has("app_token"))
+                editor.putString(TOKEN, user.getString("app_token"));
+
+            if(user.has("type"))
+                editor.putString(TYPE, user.getString("type"));
+
             editor.putString(EMAIL, user.getString("email"));
             editor.putBoolean(IS_LOGGED_IN_KEY, true);
             editor.putInt(ID , user.getInt("id"));
-            editor.putString(TYPE, user.getString("type"));
+
             //editor.putString(ADDRESS, user.getString("address"));
             //editor.putString(PROFILE_IMAGE, user.getString("address"));
 

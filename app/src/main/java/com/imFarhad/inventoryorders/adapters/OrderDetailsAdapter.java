@@ -25,7 +25,6 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         this.context = context;
         this.orders  = orders;
     }
-
     @NonNull
     @Override
     public OrderDetailsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {

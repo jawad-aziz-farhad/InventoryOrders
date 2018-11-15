@@ -45,8 +45,8 @@ public class OrdersFragment extends Fragment {
     private ArrayList<Order> orders;
     private RecyclerView recyclerView;
     private OrdersAdapter ordersAdapter;
-    private JSONArray ordersResponse ;
     private OrderItemClickListener orderItemClickListener;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -70,7 +70,6 @@ public class OrdersFragment extends Fragment {
         };
 
         orders = new ArrayList<>();
-
         getOrders();
         return view;
     }
@@ -185,7 +184,7 @@ public class OrdersFragment extends Fragment {
                         this.orders.add(order);
                     }
                 }
-                ordersAdapter = new OrdersAdapter(getActivity(), this.orders , orderItemClickListener);
+                ordersAdapter = new OrdersAdapter(getActivity(), this.orders , orderItemClickListener , "shopkeeper");
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());

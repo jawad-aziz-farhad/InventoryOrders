@@ -4,7 +4,7 @@
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign In</string>
+    <string name="action_sign_Up">Sign Up</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="loader_msg">Please wait</string>
     <string name="error_invalid_email">This email address is invalid</string>
@@ -20,7 +20,7 @@
     <string name="wrond_card_expiry_month">Card expiry month is incorrect.</string>
     <string name="wrond_card_expiry_year">Card expiry year is incorrect.</string>
 
-    <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_login">Sign In</string>
     <string name="error_message">Something went wrong.</string>
     <string name="create_account">Create Account !!!</string>
     <string name="reset_password_success_message">An email has been sent to your email address. please check your email.</string>
@@ -92,6 +92,13 @@
     <string name="title_activity_maps">Map</string>
     <string name="show_details">Show Details</string>
     <string name="show_location">Show Location</string>
+
+    <string name="shopkeeper_type">Shop Keeper</string>
+    <string name="saleman_type">Saleman</string>
+
+    <string name="start_status">Start</string>
+    <string name="accept_status">Accept</string>
+    <string name="delivered_status">Delivered</string>
 
     <string name="stripe_payment_done">"Stripe Payment done successfully.\n"</string>
 

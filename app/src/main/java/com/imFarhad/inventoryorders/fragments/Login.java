@@ -10,28 +10,22 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.imFarhad.inventoryorders.R;
 import com.imFarhad.inventoryorders.activities.LoginActivity;
 import com.imFarhad.inventoryorders.activities.SliderMenu;
 import com.imFarhad.inventoryorders.app.AppConfig;
 import com.imFarhad.inventoryorders.app.Connectivity;
-import com.imFarhad.inventoryorders.app.NotificationUtils;
-import com.imFarhad.inventoryorders.app.Preferences;
 import com.imFarhad.inventoryorders.app.SessionManager;
 import com.imFarhad.inventoryorders.interfaces.IResult;
 import com.imFarhad.inventoryorders.services.VolleyService;
@@ -57,6 +51,8 @@ public class Login extends Fragment {
     private static final String TAG = LoginActivity.class.getSimpleName();
     private ProgressDialog progressDialog;
     private TextView forgotPassword;
+    private RadioGroup mUserTypeGroup;
+    private String userType = "shopkeeper";
 
     @Nullable
     @Override
@@ -68,9 +64,8 @@ public class Login extends Fragment {
         progressDialog = new ProgressDialog(getActivity());
         mErrorView = (TextView)view.findViewById(R.id.loginError);
         mEmailView = (AutoCompleteTextView)view. findViewById(R.id.email);
-
         mPasswordView = (EditText)view. findViewById(R.id.password);
-
+        mUserTypeGroup = (RadioGroup)view.findViewById(R.id.login_userType);
         Button mEmailSignInButton = (Button)view. findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,11 +82,19 @@ public class Login extends Fragment {
             }
         });
 
+        mUserTypeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                RadioButton checkedRadioButton = (RadioButton)radioGroup.findViewById(checkedId);
+                userType = checkedRadioButton.getText().toString();
+            }
+        });
+
         return view;
     }
 
     //TODO: CHECKING FOR INTERNET CONNECTION
-    private void isInternetAvailable(){
+    private void isInternetAvailable() {
         if(Connectivity.isConnected(getActivity()) && (Connectivity.isConnectedMobile(getActivity()) || Connectivity.isConnectedWifi(getActivity())))
             login();
         else
@@ -112,21 +115,21 @@ public class Login extends Fragment {
             @Override
             public void onSuccess(String requestType, JSONObject response) {
                 Log.d(TAG,"Response: "+ response.toString());
-
                 try {
                     hideDialog();
-                    if(response.has("user") ) {
-                        JSONArray user = response.getJSONArray("user");
-                        Log.w(TAG, user.toString());
-                        sessionManager.setUpUser(user.getJSONObject(0));
-                        //NotificationUtils notificationUtils = new NotificationUtils(getActivity());
-                        //notificationUtils.sendTokenToServer(new Preferences(getActivity()).getFCMToken());
+                    if(response.has("user") || response.has("saleman")) {
+                        if(response.has("user")) {
+                            JSONArray user = response.getJSONArray("user");
+                            sessionManager.setUpUser(user.getJSONObject(0));
+                        }
+                        else if(response.has("saleman"))
+                            sessionManager.setUpUser(response.getJSONObject("saleman"));
+
                         startActivity(new Intent(getActivity(), SliderMenu.class));
                         getActivity().finish();
                     }
                     else{
-                        JSONObject error = response.getJSONObject("error");
-                        Log.e(TAG, "Login Error: "+ error.getString("message"));
+                        Log.e(TAG, userType + " Login Error for "+ response.getString("message"));
                         showLoginError();
                     }
                 }
@@ -140,9 +143,13 @@ public class Login extends Fragment {
                 showLoginError();
             }
         };
-
+        String LoginUrl = null;
+        if(userType.equals("shopkeeper"))
+            LoginUrl = AppConfig.LOGIN_URL;
+        else
+            LoginUrl = AppConfig.SALEMAN_LOGIN_URL;
         VolleyService volleyService = new VolleyService(iResult , getActivity());
-        volleyService.postRequest(AppConfig.LOGIN_URL, "POST" , new JSONObject(params));
+        volleyService.postRequest(LoginUrl, "POST" , new JSONObject(params));
     }
 
     //TODO: SHOWING LOGIN ERROR

@@ -89,8 +89,7 @@ public class SliderMenu extends AppCompatActivity {
     //TODO: SHOWING HIDING MENU ITEMS
     private void show_hide_item(NavigationView navigationView) {
         Menu menu = navigationView.getMenu();
-        String type = new SessionManager(this).getType();
-        if(type.equals("salesman")) {
+        if(sessionManager.getType().equals("saleman")) {
             menu.findItem(R.id.nav_orders).setVisible(false);
         }
     }
@@ -98,7 +97,6 @@ public class SliderMenu extends AppCompatActivity {
     public void selectDrawerItem(MenuItem menuItem) {
         switch(menuItem.getItemId()) {
             case R.id.nav_home:
-                //fragmentTransaction(new CategoriesFragment() , menuItem);
                 if(sessionManager.getType().equals("shopkeeper"))
                     fragmentTransaction(new CategoriesFragment() , menuItem);
                 else

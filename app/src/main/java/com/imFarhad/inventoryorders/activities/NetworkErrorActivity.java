@@ -1,24 +1,16 @@
 package com.imFarhad.inventoryorders.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.NetworkError;
-import com.android.volley.VolleyError;
 import com.imFarhad.inventoryorders.R;
-import com.imFarhad.inventoryorders.app.AppConfig;
 import com.imFarhad.inventoryorders.app.Connectivity;
 import com.imFarhad.inventoryorders.app.SessionManager;
-import com.imFarhad.inventoryorders.interfaces.IResult;
-import com.imFarhad.inventoryorders.services.VolleyService;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class NetworkErrorActivity extends AppCompatActivity {
 

@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,10 +27,12 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     private ArrayList<Order> orders;
     private OrderItemClickListener orderItemClickListener;
     public Order order = null;
+    public String ordersFor = null;
 
-    public OrdersAdapter(Context context, ArrayList<Order> orders, OrderItemClickListener orderItemClickListener){
+    public OrdersAdapter(Context context, ArrayList<Order> orders, OrderItemClickListener orderItemClickListener, String ordersFor){
         this.context = context;
         this.orders  = orders;
+        this.ordersFor = ordersFor;
         this.orderItemClickListener = orderItemClickListener;
     }
 
@@ -43,16 +46,36 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull OrdersAdapter.ViewHolder viewHolder, int i) {
         final Order order = orders.get(i);
-        if(order.getStatus() == 5) {
-            viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.green));
+
+        if(ordersFor.equals("saleman")){
+
             viewHolder.overFlow.setVisibility(View.GONE);
+            viewHolder.statusBtn.setVisibility(View.VISIBLE);
+
+            if(order.getStatus() == 1)
+                viewHolder.statusBtn.setText(context.getString(R.string.accept_status));
+            else if(order.getStatus() == 2)
+                viewHolder.statusBtn.setText(context.getString(R.string.delivered_status));
+            else if(order.getStatus() == 3 || order.getStatus() == 4 || order.getStatus() == 5){
+                viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.green));
+                viewHolder.statusBtn.setVisibility(View.GONE);
+            }
         }
+        else {
+            viewHolder.overFlow.setVisibility(View.VISIBLE);
+            viewHolder.statusBtn.setVisibility(View.GONE);
+            if(order.getStatus() == 4 || order.getStatus() == 5){
+                viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.green));
+                viewHolder.overFlow.setVisibility(View.GONE);
+            }
+        }
+
         viewHolder.bind(order, orderItemClickListener);
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                orderItemClickListener.OnItemClick(order);
+           orderItemClickListener.OnItemClick(order);
             }
         });
         viewHolder.overFlow.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +83,13 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             public void onClick(View view) {
             setOrder(order);
             showPopupMenu(view);
+            }
+        });
+
+        viewHolder.statusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                orderItemClickListener.OnItemClick(order);
             }
         });
     }
@@ -76,6 +106,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         private TextView orderPaidAmount;
         private TextView orderTotalAmount;
         private ImageView overFlow;
+        private Button statusBtn;
+
         public final String TAG = ProductsAdapter.class.getSimpleName();
 
         public ViewHolder(final View itemView) {
@@ -84,7 +116,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             orderPaidAmount  = (TextView) itemView.findViewById(R.id.orderPaidAmount);
             orderTotalAmount = (TextView) itemView.findViewById(R.id.orderTotalAmount);
             overFlow         = (ImageView) itemView.findViewById(R.id.overflow);
-
+            statusBtn        = (Button) itemView.findViewById(R.id.order_status);
         }
 
         public void bind(final Order order, final OrderItemClickListener listener) {
