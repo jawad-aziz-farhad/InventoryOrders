@@ -44,7 +44,7 @@ public class OrdersFragment extends Fragment {
     private ProgressDialog progressDialog;
     private ArrayList<Order> orders;
     private RecyclerView recyclerView;
-    private OrdersAdapter ordersAdapter;
+    public OrdersAdapter ordersAdapter;
     private OrderItemClickListener orderItemClickListener;
 
     @Nullable

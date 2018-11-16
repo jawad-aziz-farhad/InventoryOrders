@@ -132,7 +132,7 @@ public class SignUp extends Fragment {
         params.put("email", email);
         params.put("password", password);
 
-        //CALLBACK FOR LOGIN RESPONSE
+        //CALLBACK FOR SIGNUP RESPONSE
         IResult iResult = new IResult() {
             @Override
             public void onSuccess(String requestType, JSONObject response) {

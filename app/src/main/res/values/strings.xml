@@ -45,6 +45,7 @@
 
     <string name="action_settings">Settings</string>
 
+    <string name="action_received">Order Received</string>
     <string name="action_details">Show Details</string>
     <string name="action_location">Show Location</string>
     <string name="total">Total : </string>
@@ -100,6 +101,7 @@
     <string name="accept_status">Accept</string>
     <string name="delivered_status">Delivered</string>
 
-    <string name="stripe_payment_done">"Stripe Payment done successfully.\n"</string>
+    <string name="stripe_payment_done">Stripe Payment done successfully.\n</string>
+    <string name="change_status_msg">"You have to deliver your current order first"</string>
 
 </resources>
