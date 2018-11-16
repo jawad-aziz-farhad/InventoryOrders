@@ -82,12 +82,5 @@
         android:layout_height="@dimen/ic_album_overflow_height"
         android:src="@drawable/ic_more_vert"/>
 
-    <Button
-        android:layout_width="0dp"
-        android:layout_weight="0.6"
-        android:layout_height="wrap_content"
-        android:text="Start"
-        android:id="@+id/order_status"
-        android:visibility="gone"/>
 
 </LinearLayout>

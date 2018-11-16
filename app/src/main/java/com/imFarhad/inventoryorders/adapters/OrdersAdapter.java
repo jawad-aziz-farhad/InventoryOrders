@@ -2,25 +2,21 @@ package com.imFarhad.inventoryorders.adapters;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.imFarhad.inventoryorders.R;
-import com.imFarhad.inventoryorders.activities.SliderMenu;
 import com.imFarhad.inventoryorders.app.AppConfig;
 import com.imFarhad.inventoryorders.fragments.OrdersFragment;
 import com.imFarhad.inventoryorders.interfaces.IResult;
@@ -33,7 +29,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder> {
 
@@ -49,7 +44,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         this.context = context;
         this.orders  = orders;
         this.ordersFor = ordersFor;
-        this.progressDialog = new ProgressDialog(context);
+        this.progressDialog = new ProgressDialog(this.context);
         this.orderItemClickListener = orderItemClickListener;
     }
 
@@ -64,26 +59,25 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     public void onBindViewHolder(@NonNull OrdersAdapter.ViewHolder viewHolder, int i) {
         final Order order = orders.get(i);
 
+        //VIEW FOR SALE MAN
         if(ordersFor.equals("saleman")){
 
-            viewHolder.overFlow.setVisibility(View.GONE);
-            viewHolder.statusBtn.setVisibility(View.VISIBLE);
-
-            if(order.getStatus() == 1) {
-                viewHolder.statusBtn.setText(context.getString(R.string.accept_status));
+            if(order.getStatus() == 2 || order.getStatus() == 5) {
                 viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.yellow));
             }
-            else if(order.getStatus() == 2)
-                viewHolder.statusBtn.setText(context.getString(R.string.delivered_status));
-            else if(order.getStatus() == 3 || order.getStatus() == 4 || order.getStatus() == 5){
+            else if(order.getStatus() == 3){
                 viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.green));
-                viewHolder.statusBtn.setVisibility(View.GONE);
+                viewHolder.overFlow.setVisibility(View.GONE);
             }
         }
+
+        //VIEW FOR SHOP KEEPER
         else {
-            viewHolder.overFlow.setVisibility(View.VISIBLE);
-            viewHolder.statusBtn.setVisibility(View.GONE);
-            if(order.getStatus() == 4 || order.getStatus() == 5){
+            if(order.getStatus() == 2) {
+                viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.yellow));
+            }
+
+            if(order.getStatus() == 3 || order.getStatus() == 5){
                 viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.green));
                 viewHolder.overFlow.setVisibility(View.GONE);
             }
@@ -101,17 +95,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             @Override
             public void onClick(View view) {
             setOrder(order);
-            showPopupMenu(view, order);
-            }
-        });
-
-        viewHolder.statusBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(checkAllOrdersStatus())
-                    Toast.makeText(context, context.getString(R.string.change_status_msg), Toast.LENGTH_LONG).show();
-                else
-                    changeStatus(order);
+            showPopupMenu(view);
             }
         });
     }
@@ -127,7 +111,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         private TextView orderPaidAmount;
         private TextView orderTotalAmount;
         private ImageView overFlow;
-        private Button statusBtn;
 
         public final String TAG = ProductsAdapter.class.getSimpleName();
 
@@ -137,7 +120,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             orderPaidAmount  = (TextView) itemView.findViewById(R.id.orderPaidAmount);
             orderTotalAmount = (TextView) itemView.findViewById(R.id.orderTotalAmount);
             overFlow         = (ImageView) itemView.findViewById(R.id.overflow);
-            statusBtn        = (Button) itemView.findViewById(R.id.order_status);
         }
 
         public void bind(final Order order, final OrderItemClickListener listener) {
@@ -152,19 +134,25 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
 
     //TODO Showing popup menu when tapping on 3 dots
-    private void showPopupMenu(View view, Order order) {
+    private void showPopupMenu(View view) {
         // inflate menu
         PopupMenu popup = new PopupMenu(context, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.slider_menu, popup.getMenu());
-        //HIDING MENU ITEM IF ORDER STATUS IS NOT 2
-        MenuItem menuItem = view.findViewById(R.id.action_status_change);
-        if(order.getStatus() == 2)
-            menuItem.setVisible(true);
-        else
-            menuItem.setVisible(false);
+        Menu popupMenu = popup.getMenu();
+        if(ordersFor.equals("shopkeeper"))
+            setstatusMenuItem(popupMenu);
         popup.setOnMenuItemClickListener(new MyMenuItemClickListener(this.orderItemClickListener));
         popup.show();
+    }
+
+    //TODO: STATUS MENU ITEM TEXT CHANGE
+    public void setstatusMenuItem(Menu popupMenu){
+        if(getOrder().getStatus() == 1)
+            popupMenu.findItem(R.id.action_status_change).setTitle("ACCEPT");
+        else if(getOrder().getStatus() == 2)
+            popupMenu.findItem(R.id.action_status_change).setTitle("Delivered");
+
     }
 
     // TODO Click listener for popup menu items
@@ -177,6 +165,15 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
+                case R.id.action_status_change:
+                    if(ordersFor.equals("saleman")) {
+                        if (checkAllOrdersStatus())
+                            changeStatus(getOrder());
+                    }
+                    else
+                        changeStatus(getOrder());
+
+                    return  true;
                 case R.id.action_details:
                     orderItemClickListener.showOrderDetails(getOrder());
                     return true;
@@ -191,20 +188,16 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
     //TODO: CHECKING ALL THE ORDERS BEFORE CALLING THE ORDER STATUS CHANGE END POINT IF SOME ORDER IS ALREAY ACCEPTED AND NOT DELIVERED, NO OTHER ORDER WILL BE ACCEPTED
     public boolean checkAllOrdersStatus() {
-
-        boolean status = false;
-
         for(Order order: this.orders) {
-            if(order.getStatus() == 1) {
-                status = true;
-                return status;
+            if(order.getStatus() == 2) {
+                return true;
             }
         }
-        return status;
+        return false;
     }
 
     /*
-    * STATUS 0 : PENDING
+    * STATUS 0 : UN - ASSIGNED
     * STATUS 1 : ASSIGNED
     * STATUS 2 : ACCEPTED
     * STATUS 3 : RECEIVED BY SHOP KEEPER
@@ -226,8 +219,16 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         IResult iResult = new IResult() {
             @Override
             public void onSuccess(String requestType, JSONObject response) {
+                hideDialog();
                 Log.d(TAG,"Order Status Change Response: "+ response.toString());
-                new OrdersFragment().ordersAdapter.notifyDataSetChanged();
+                if(response.has("success")){
+                    try {
+                        JSONObject jsonObject = response.getJSONObject("orders");
+                        getOrder().setStatus(jsonObject.getInt("status"));
+                        new OrdersFragment().ordersAdapter.notifyDataSetChanged();
+                    }catch (JSONException e){e.printStackTrace();}
+                }
+
             }
 
             @Override
@@ -239,7 +240,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         };
         VolleyService volleyService = new VolleyService(iResult ,context);
         volleyService.postRequest(AppConfig.ORDER_STATUS_URL, "POST" , new JSONObject(params));
-
     }
 
     //TODO: SHOWING PROGRESS DIALOG

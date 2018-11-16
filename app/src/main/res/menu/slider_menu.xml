@@ -4,7 +4,7 @@
     <item
         android:id="@+id/action_status_change"
         android:orderInCategory="100"
-        android:title="@string/action_location"/>
+        android:title="@string/action_received"/>
 
     <item
         android:id="@+id/action_details"
