@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.imFarhad.inventoryorders.R;
@@ -52,21 +53,23 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     @Override
     public OrdersAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.orders, viewGroup, false);
+
         return new OrdersAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull OrdersAdapter.ViewHolder viewHolder, int i) {
-        final Order order = orders.get(i);
 
+        final Order order = orders.get(i);
+        Log.w(TAG, "Order Status at " + (i + 1) + " is "  + order.getStatus());
         //VIEW FOR SALE MAN
         if(ordersFor.equals("saleman")){
 
             if(order.getStatus() == 2 || order.getStatus() == 5) {
-                viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.yellow));
+                //viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.yellow));
             }
             else if(order.getStatus() == 3){
-                viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.green));
+                //viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.green));
                 viewHolder.overFlow.setVisibility(View.GONE);
             }
         }
@@ -74,11 +77,11 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         //VIEW FOR SHOP KEEPER
         else {
             if(order.getStatus() == 2) {
-                viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.yellow));
+                //viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.yellow));
             }
 
             if(order.getStatus() == 3 || order.getStatus() == 5){
-                viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.green));
+                //viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.green));
                 viewHolder.overFlow.setVisibility(View.GONE);
             }
         }
@@ -94,10 +97,16 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         viewHolder.overFlow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+            Log.w(TAG, "Order Id "+ order.getOrder_id() + " Status " + order.getStatus());
             setOrder(order);
             showPopupMenu(view);
             }
         });
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull ViewHolder holder) {
+        super.onViewRecycled(holder);
     }
 
     @Override
@@ -116,6 +125,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
         public ViewHolder(final View itemView) {
             super(itemView);
+            this.setIsRecyclable(false);
             orderName        = (TextView) itemView.findViewById(R.id.orderName);
             orderPaidAmount  = (TextView) itemView.findViewById(R.id.orderPaidAmount);
             orderTotalAmount = (TextView) itemView.findViewById(R.id.orderTotalAmount);
@@ -135,23 +145,33 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
     //TODO Showing popup menu when tapping on 3 dots
     private void showPopupMenu(View view) {
-        // inflate menu
         PopupMenu popup = new PopupMenu(context, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.slider_menu, popup.getMenu());
         Menu popupMenu = popup.getMenu();
-        if(ordersFor.equals("shopkeeper"))
-            setstatusMenuItem(popupMenu);
+        setstatusMenuItem(popupMenu);
         popup.setOnMenuItemClickListener(new MyMenuItemClickListener(this.orderItemClickListener));
         popup.show();
     }
 
     //TODO: STATUS MENU ITEM TEXT CHANGE
     public void setstatusMenuItem(Menu popupMenu){
-        if(getOrder().getStatus() == 1)
-            popupMenu.findItem(R.id.action_status_change).setTitle("ACCEPT");
-        else if(getOrder().getStatus() == 2)
-            popupMenu.findItem(R.id.action_status_change).setTitle("Delivered");
+        Log.w(TAG, "Status " + getOrder().getStatus());
+        if(ordersFor.equals("saleman")) {
+            if (getOrder().getStatus() == 1)
+                popupMenu.findItem(R.id.action_status_change).setTitle("ACCEPT");
+            else if (getOrder().getStatus() == 2)
+                popupMenu.findItem(R.id.action_status_change).setTitle("Delivered");
+        }
+        else{
+
+            if (getOrder().getStatus() == 2) {
+                popupMenu.findItem(R.id.action_status_change).setVisible(true);
+                popupMenu.findItem(R.id.action_status_change).setTitle("Received");
+            }
+            else
+                popupMenu.findItem(R.id.action_status_change).setVisible(false);
+        }
 
     }
 
@@ -167,12 +187,15 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             switch (menuItem.getItemId()) {
                 case R.id.action_status_change:
                     if(ordersFor.equals("saleman")) {
-                        if (checkAllOrdersStatus())
+                        if(getOrder().getStatus() == 2 || getOrder().getStatus() == 5)
                             changeStatus(getOrder());
+                        else {
+                            //if (!checkAllOrdersStatus())
+                                changeStatus(getOrder());
+                        }
                     }
                     else
                         changeStatus(getOrder());
-
                     return  true;
                 case R.id.action_details:
                     orderItemClickListener.showOrderDetails(getOrder());
@@ -212,8 +235,19 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("order_id", order.getOrder_id());
-        params.put("status", order.getStatus());
         params.put("request_type", ordersFor);
+
+        if(ordersFor.equals("saleman")){
+            if(order.getStatus() == 1)
+                params.put("status", 2);
+            else if(order.getStatus() == 2 || order.getStatus() == 5)
+                params.put("status", 3);
+        }
+
+        else if(ordersFor.equals("shopkeeper")){
+            if(order.getStatus() == 2)
+                params.put("status", 5);
+        }
 
          //CALLBACK FOR STATUS CHANGE RESPONSE
         IResult iResult = new IResult() {
@@ -225,8 +259,27 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                     try {
                         JSONObject jsonObject = response.getJSONObject("orders");
                         getOrder().setStatus(jsonObject.getInt("status"));
-                        new OrdersFragment().ordersAdapter.notifyDataSetChanged();
+                        // FOR SALE-MAN
+                        if(ordersFor.equals("saleman")) {
+                            if (jsonObject.getInt("status") == 2)
+                                Toast.makeText(context, "Order accepted successfully.", Toast.LENGTH_LONG).show();
+                        }
+                        //FOR SHOP-KEEPER
+                        else {
+                            if(jsonObject.getInt("status") == 2)
+                                Toast.makeText(context, "Order Received Successfully", Toast.LENGTH_LONG).show();
+
+                        }
+                        notifyDataSetChanged();
+
                     }catch (JSONException e){e.printStackTrace();}
+                }
+                else if(response.has("failed")){
+                    try {
+                        String message = response.getString("failed");
+                        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+                    }
+                    catch (JSONException e){e.printStackTrace();}
                 }
 
             }
@@ -235,7 +288,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             public void onError(String requestType, VolleyError error) {
                 hideDialog();
                 Log.e(TAG, "Order Status Change Error: "+ error.getMessage());
-
             }
         };
         VolleyService volleyService = new VolleyService(iResult ,context);

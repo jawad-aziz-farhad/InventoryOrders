@@ -100,7 +100,7 @@ public class AssignedFragment extends Fragment {
         };
 
         int user_id = new SessionManager(getActivity()).getId();
-        String uri = AppConfig.SALEMAN_ORDERS_URL + 2;
+        String uri = AppConfig.SALEMAN_ORDERS_URL + user_id;
         Log.w(TAG, uri);
         VolleyService volleyService = new VolleyService(iResult , getActivity());
         volleyService.getRequest(uri , "GET", null);
