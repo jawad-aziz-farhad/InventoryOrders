@@ -5,7 +5,7 @@ package com.imFarhad.inventoryorders.app;
  */
 
 public class AppConfig {
-    public static final String SERVER_URL = "http://stark-brook-90313.herokuapp.com/api/";
+    public static final String SERVER_URL = "http://ocsas.premiummeat.co.nz/api/";
     public static final String SIGNUP_URL = SERVER_URL + "user/create";
     public static final String SALEMAN_SIGNUP_URL = SERVER_URL + "add/saleman";
     public static final String LOGIN_URL = SERVER_URL + "user/auth";

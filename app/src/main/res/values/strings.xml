@@ -25,6 +25,8 @@
     <string name="create_account">Create Account !!!</string>
     <string name="reset_password_success_message">An email has been sent to your email address. please check your email.</string>
 
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
     <string name="profile_name">Name</string>
     <string name="profile_email">Email:</string>
     <string name="profile_phone">Phone:</string>
