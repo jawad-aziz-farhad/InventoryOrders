@@ -2,6 +2,7 @@ package com.imFarhad.inventoryorders.adapters;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.imFarhad.inventoryorders.R;
+import com.imFarhad.inventoryorders.activities.MapsActivity;
 import com.imFarhad.inventoryorders.app.AppConfig;
 import com.imFarhad.inventoryorders.fragments.OrdersFragment;
 import com.imFarhad.inventoryorders.interfaces.IResult;
@@ -261,8 +263,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                         getOrder().setStatus(jsonObject.getInt("status"));
                         // FOR SALE-MAN
                         if(ordersFor.equals("saleman")) {
-                            if (jsonObject.getInt("status") == 2)
+                            if (jsonObject.getInt("status") == 2) {
                                 Toast.makeText(context, "Order accepted successfully.", Toast.LENGTH_LONG).show();
+                                context.startActivity(new Intent(context, MapsActivity.class));
+                            }
                         }
                         //FOR SHOP-KEEPER
                         else {

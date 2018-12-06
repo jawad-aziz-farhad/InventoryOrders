@@ -129,6 +129,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Location location = locationResult.getLastLocation();
                     LinkedHashMap<String, String> message = getNewLocationMessage(location.getLatitude(), location.getLongitude());
                     updateUI(message);
+
                     pubNub.publish()
                           .message(message)
                           .channel(AppConfig.PUBNUB_CHANNEL_NAME)

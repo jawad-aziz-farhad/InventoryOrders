@@ -77,7 +77,7 @@ public class AssignedFragment extends Fragment {
                 showDetails(order);
             }
             @Override
-            public void showOrderDetails(Order order) {}
+            public void showOrderDetails(Order order) { showDetails(order);}
             @Override
             public void showOrderLocation(Order order) {}
         };
@@ -131,55 +131,39 @@ public class AssignedFragment extends Fragment {
             }
             else{
                 ArrayList<OrderModel> allOrders = new ArrayList<>();
-                ArrayList<OrderDetails> orderDetailsArray = new ArrayList<>();
+                for(int i=0; i<orders.length(); i++) {
 
-                for(int i=0; i<orders.length(); i++){
-                    JSONObject jsonObject = orders.getJSONObject(i);
-                    OrderDetails order_Details = new OrderDetails();
-                    order_Details.setId(jsonObject.getInt("id"));
-                    order_Details.setProduct_id(jsonObject.getInt("product_id"));
-                    order_Details.setOrder_id(jsonObject.getInt("order_id"));
-                    order_Details.setUnit_price(Integer.parseInt(jsonObject.getString("unit_price")));
-                    order_Details.setAmount(Integer.parseInt(jsonObject.getString("amount")));
-                    order_Details.setQuantity(jsonObject.getInt("quantity"));
-                    order_Details.setCreated_at(jsonObject.getString("created_at"));
-                    order_Details.setUpdated_at(jsonObject.getString("updated_at"));
-                    order_Details.setUser_id(jsonObject.getInt("user_id"));
-                    order_Details.setSaleman_id(jsonObject.getInt("saleman_id"));
-                    order_Details.setStatus(jsonObject.getInt("status"));
+                    JSONObject order = orders.getJSONObject(i);
+                    JSONObject _order = order.getJSONObject("order");
+                    JSONArray details = order.getJSONArray("orderDetails");
+
+                    ArrayList<OrderDetails> orderDetailsArray = new ArrayList<>();
+
+                    for(int j=0; j<details.length(); j++) {
+
+                        OrderDetails order_Details = new OrderDetails();
+                        JSONObject jsonObject = details.getJSONObject(0);
+                        order_Details.setId(jsonObject.getInt("id"));
+                        order_Details.setProduct_id(jsonObject.getInt("product_id"));
+                        order_Details.setOrder_id(jsonObject.getInt("order_id"));
+                        order_Details.setUnit_price(Integer.parseInt(jsonObject.getString("unit_price")));
+                        order_Details.setAmount(Integer.parseInt(jsonObject.getString("amount")));
+                        order_Details.setQuantity(jsonObject.getInt("quantity"));
+                        order_Details.setCreated_at(jsonObject.getString("created_at"));
+                        order_Details.setUpdated_at(jsonObject.getString("updated_at"));
+
+                        order_Details.setUser_id(_order.getInt("user_id"));
+                        order_Details.setSaleman_id(_order.getInt("saleman_id"));
+                        order_Details.setStatus(_order.getInt("status"));
+
+                        orderDetailsArray.add(order_Details);
+                    }
 
                     OrderModel orderModel = new OrderModel();
+                    orderModel.setStatus(_order.getInt("status"));
+                    orderModel.setOrderDetails(orderDetailsArray);
+                    allOrders.add(orderModel);
 
-                    if(orderDetailsArray.size() > 0){
-                        int size = orderDetailsArray.size();
-                        OrderDetails order_details = orderDetailsArray.get(size - 1);
-
-                        if(order_details.getOrder_id() == order_Details.getOrder_id()){
-                            orderDetailsArray.add(order_Details);
-                            if(i == (orders.length() - 1)){
-                                orderModel.setStatus(order_Details.getStatus());
-                                orderModel.setOrderDetails(orderDetailsArray);
-                                allOrders.add(orderModel);
-                            }
-                        }
-                        else{
-                            orderModel.setStatus(order_details.getStatus());
-                            orderModel.setOrderDetails(orderDetailsArray);
-                            allOrders.add(orderModel);
-
-                            orderDetailsArray = new ArrayList<>();
-                            orderDetailsArray.add(order_Details);
-                        }
-                    }
-
-                    else {
-                        orderDetailsArray.add(order_Details);
-                        if(orders.length() == 1){
-                            orderModel.setStatus(order_Details.getStatus());
-                            orderModel.setOrderDetails(orderDetailsArray);
-                            allOrders.add(orderModel);
-                        }
-                    }
                 }
 
                 this.orders = new ArrayList<>();
