@@ -187,7 +187,6 @@ public class AssignedFragment extends Fragment {
                         this.orders.add(order);
                     }
                 }
-
                 ordersAdapter = new OrdersAdapter(getActivity(), this.orders , orderItemClickListener, "saleman");
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
                 recyclerView.setLayoutManager(layoutManager);

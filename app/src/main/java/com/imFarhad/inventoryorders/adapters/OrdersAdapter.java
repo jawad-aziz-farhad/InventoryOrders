@@ -32,6 +32,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Handler;
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder> {
 
@@ -160,13 +161,17 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     public void setstatusMenuItem(Menu popupMenu){
         Log.w(TAG, "Status " + getOrder().getStatus());
         if(ordersFor.equals("saleman")) {
-            if (getOrder().getStatus() == 1)
+            if (getOrder().getStatus() == 1) {
                 popupMenu.findItem(R.id.action_status_change).setTitle("ACCEPT");
+                popupMenu.findItem(R.id.action_location).setVisible(false);
+            }
             else if (getOrder().getStatus() == 2)
                 popupMenu.findItem(R.id.action_status_change).setTitle("Delivered");
         }
         else{
 
+            if (getOrder().getStatus() == 1)
+                popupMenu.findItem(R.id.action_location).setVisible(false);
             if (getOrder().getStatus() == 2) {
                 popupMenu.findItem(R.id.action_status_change).setVisible(true);
                 popupMenu.findItem(R.id.action_status_change).setTitle("Received");
@@ -192,8 +197,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                         if(getOrder().getStatus() == 2 || getOrder().getStatus() == 5)
                             changeStatus(getOrder());
                         else {
-                            //if (!checkAllOrdersStatus())
+                            if (!checkAllOrdersStatus())
                                 changeStatus(getOrder());
+                            else
+                                Toast.makeText(context, context.getString(R.string.deliver_order_first), Toast.LENGTH_LONG).show();
                         }
                     }
                     else
@@ -231,7 +238,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     */
 
     //TODO CHANGING ORDER STATUS
-    public void changeStatus(Order order){
+    public void changeStatus(final Order order){
         progressDialog.setMessage(context.getString(R.string.loader_msg));
         showDialog();
 
@@ -264,8 +271,11 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                         // FOR SALE-MAN
                         if(ordersFor.equals("saleman")) {
                             if (jsonObject.getInt("status") == 2) {
-                                Toast.makeText(context, "Order accepted successfully.", Toast.LENGTH_LONG).show();
-                                context.startActivity(new Intent(context, MapsActivity.class));
+                                Log.w(TAG,"Order accepted successfully.");
+                                Intent intent = new Intent(context, MapsActivity.class);
+                                intent.putExtra("OrderId", order.getOrder_id());
+                                context.startActivity(intent);
+
                             }
                         }
                         //FOR SHOP-KEEPER

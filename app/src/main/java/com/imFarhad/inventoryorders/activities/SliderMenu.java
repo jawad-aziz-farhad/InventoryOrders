@@ -2,6 +2,8 @@ package com.imFarhad.inventoryorders.activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
@@ -13,9 +15,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.imFarhad.inventoryorders.R;
 import com.imFarhad.inventoryorders.app.SessionManager;
@@ -63,15 +67,21 @@ public class SliderMenu extends AppCompatActivity {
         View view = navigationView.getHeaderView(0);
 
         /* SETTING UP HEADER VALUES */
-        TextView userName = (TextView)view.findViewById(R.id.userName);
+        ImageView userImage = (ImageView)view.findViewById(R.id.user_image);
+        TextView userName  = (TextView)view.findViewById(R.id.userName);
         TextView userEmail = (TextView)view.findViewById(R.id.userEmail);
 
         userName.setText(sessionManager.getName());
         userEmail.setText(sessionManager.getEmail());
+        if(sessionManager.getImage() != null){
+            String base64Image = sessionManager.getImage().split(",")[1];
+            byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            userImage.setImageBitmap(decodedByte);
+        }
 
         setupDrawerContent(navigationView);
         show_hide_item(navigationView);
-
     }
 
     //TODO: SETTING UP DRAWER CONTENT

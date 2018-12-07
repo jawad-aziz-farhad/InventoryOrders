@@ -52,7 +52,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationRequest locationRequest;
     private static final int REQUEST_CODE = 100;
     private static final String TAG = LocationTracking.class.getSimpleName();
-
+    private String CHANNEL_NAME = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,9 +64,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
 
+        if(getIntent().getExtras() != null){
+            CHANNEL_NAME = getIntent().getExtras().getString("OrderId");
+        }
+
         initLocationAPIs();
 
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             checkPermissions();
         else
             initPubNub();
@@ -132,7 +136,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     pubNub.publish()
                           .message(message)
-                          .channel(AppConfig.PUBNUB_CHANNEL_NAME)
+                          .channel(CHANNEL_NAME != null ? ( AppConfig.PUBNUB_CHANNEL_NAME + CHANNEL_NAME ) : AppConfig.PUBNUB_CHANNEL_NAME)
                           .async(new PNCallback<PNPublishResult>() {
                               @Override
                               public void onResponse(PNPublishResult result, PNStatus status) {

@@ -183,7 +183,7 @@ public class SignUp extends Fragment {
                 }, 3000);
             }
         };
-        String SignUpUrl = userType.equals("shopkeeper") ? AppConfig.SIGNUP_URL : AppConfig.SALEMAN_SIGNUP_URL;
+        String SignUpUrl = userType.toLowerCase().equals("shopkeeper") ? AppConfig.SIGNUP_URL : AppConfig.SALEMAN_SIGNUP_URL;
         VolleyService volleyService = new VolleyService(iResult , getActivity());
         volleyService.postRequest(SignUpUrl, "POST" , new JSONObject(params));
 

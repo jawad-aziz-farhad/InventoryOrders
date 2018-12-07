@@ -36,7 +36,7 @@
     <string name="internet_error_msg">Sorry! Internet not available or poor internet connection.</string>
     <string name="unread_notifications_msg">You have some unread notifications.</string>
     <string name="no_notifications_msg">You do not have any unread notifications yet.</string>
-
+    <string name="deliver_order_first">Please deliver the accepted order first.</string>
     <string name="retry_btn">Retry</string>
 
     <string name="title_activity_network_error">NetworkError</string>

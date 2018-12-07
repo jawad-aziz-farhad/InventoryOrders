@@ -59,7 +59,8 @@ public class SessionManager {
             editor.putInt(ID , user.getInt("id"));
 
             //editor.putString(ADDRESS, user.getString("address"));
-            //editor.putString(PROFILE_IMAGE, user.getString("address"));
+            if(user.has("image"))
+                editor.putString(PROFILE_IMAGE, user.getString("image"));
 
             editor.apply();
         }
@@ -73,7 +74,7 @@ public class SessionManager {
         user.put(EMAIL, sharedPreferences.getString(EMAIL, null));
         user.put(TYPE, sharedPreferences.getString(TYPE, null));
         //user.put(ADDRESS, sharedPreferences.getString(ADDRESS, null));
-        //user.put(PROFILE_IMAGE, sharedPreferences.getString(PROFILE_IMAGE, null));
+        user.put(PROFILE_IMAGE, sharedPreferences.getString(PROFILE_IMAGE, null));
         return user;
     }
     //TODO: GETTING LOGIN STATUS
@@ -86,6 +87,8 @@ public class SessionManager {
     public String getEmail(){ return sharedPreferences.getString(EMAIL,null);}
     //TODO: GETTING ID
     public int getId(){ return sharedPreferences.getInt(ID,0);}
+    //TODO: GETTING IMAGE
+    public String getImage(){ return sharedPreferences.getString(PROFILE_IMAGE,null);}
     //TODO: GETTING USER TYPE (SHOP KEEPER OR SALE)
     public String getType(){ return sharedPreferences.getString(TYPE,null);}
 

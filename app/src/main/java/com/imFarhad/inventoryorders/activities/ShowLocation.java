@@ -48,6 +48,7 @@ public class ShowLocation extends AppCompatActivity implements OnMapReadyCallbac
     private PubNub pubNub;
     private static final int REQUEST_CODE = 100;
     private static final String TAG = LocationTracking.class.getSimpleName();
+    private String CHANNEL_NAME = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +61,11 @@ public class ShowLocation extends AppCompatActivity implements OnMapReadyCallbac
         supportMapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
 
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M)
+        if(getIntent().getExtras() != null)
+            CHANNEL_NAME = getIntent().getExtras().getString("OrderId");
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             checkPermissions();
         else
             initPubNub();
@@ -131,7 +136,7 @@ public class ShowLocation extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         pubNub.subscribe()
-              .channels(Arrays.asList(AppConfig.PUBNUB_CHANNEL_NAME))
+              .channels(Arrays.asList(CHANNEL_NAME != null ?  (AppConfig.PUBNUB_CHANNEL_NAME + CHANNEL_NAME ) : AppConfig.PUBNUB_CHANNEL_NAME))
               .execute();
     }
 

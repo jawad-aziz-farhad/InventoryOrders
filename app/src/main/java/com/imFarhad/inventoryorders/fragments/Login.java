@@ -129,6 +129,8 @@ public class Login extends Fragment {
                         getActivity().finish();
                     }
                     else{
+                        if(response.has("error"))
+                            response = response.getJSONObject("error");
                         Log.e(TAG, userType + " Login Error for "+ response.getString("message"));
                         showLoginError();
                     }
@@ -143,11 +145,9 @@ public class Login extends Fragment {
                 showLoginError();
             }
         };
-        String LoginUrl = null;
-        if(userType.equals("shopkeeper"))
-            LoginUrl = AppConfig.LOGIN_URL;
-        else
-            LoginUrl = AppConfig.SALEMAN_LOGIN_URL;
+
+        String LoginUrl = userType.toLowerCase().equals("saleman") ? AppConfig.SALEMAN_LOGIN_URL : AppConfig.LOGIN_URL;
+        Log.w(TAG, LoginUrl);
         VolleyService volleyService = new VolleyService(iResult , getActivity());
         volleyService.postRequest(LoginUrl, "POST" , new JSONObject(params));
     }
