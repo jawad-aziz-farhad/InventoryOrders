@@ -67,7 +67,6 @@ public class OrdersFragment extends Fragment {
             }
             @Override
             public void showOrderLocation(Order order) {
-                Toast.makeText(getActivity(), "SHOW LOCATION "+ order.getOrder_name(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), ShowLocation.class);
                 intent.putExtra("OrderId", order.getOrder_id());
                 startActivity(intent);

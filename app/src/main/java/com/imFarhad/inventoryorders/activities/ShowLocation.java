@@ -64,7 +64,7 @@ public class ShowLocation extends AppCompatActivity implements OnMapReadyCallbac
         if(getIntent().getExtras() != null)
             CHANNEL_NAME = getIntent().getExtras().getString("OrderId");
 
-
+        Log.w(TAG, "Order ID "+ CHANNEL_NAME);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             checkPermissions();
         else
