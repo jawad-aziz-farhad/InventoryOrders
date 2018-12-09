@@ -84,31 +84,30 @@
             android:imeOptions="actionDone"
             android:inputType="textPassword" />
 
-        <RadioGroup
-            android:id="@+id/userType"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:weightSum="2">
+        <!--<RadioGroup-->
+            <!--android:id="@+id/userType"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_marginTop="@dimen/activity_vertical_margin"-->
+            <!--android:weightSum="2">-->
 
-            <RadioButton
-                android:id="@+id/type_shopkeeper"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="@string/shopkeeper_type"
-                android:checked="true" />
+            <!--<RadioButton-->
+                <!--android:id="@+id/type_shopkeeper"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/shopkeeper_type"-->
+                <!--android:checked="true" />-->
 
-            <RadioButton
-                android:id="@+id/type_saleman"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="@string/saleman_type" />
+            <!--<RadioButton-->
+                <!--android:id="@+id/type_saleman"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/saleman_type" />-->
 
-        </RadioGroup>
-
+        <!--</RadioGroup>-->
 
         <Button
             android:id="@+id/email_sign_in_button"
@@ -120,7 +119,6 @@
             android:text="@string/action_sign_Up"
             android:textStyle="bold"
             android:textColor="#fff"/>
-
 
     </LinearLayout>
 </RelativeLayout>

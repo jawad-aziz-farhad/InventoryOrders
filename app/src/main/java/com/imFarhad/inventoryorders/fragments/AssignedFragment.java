@@ -3,6 +3,7 @@ package com.imFarhad.inventoryorders.fragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +22,8 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.imFarhad.inventoryorders.R;
+import com.imFarhad.inventoryorders.activities.MapsActivity;
+import com.imFarhad.inventoryorders.activities.ShowLocation;
 import com.imFarhad.inventoryorders.adapters.OrdersAdapter;
 import com.imFarhad.inventoryorders.app.AppConfig;
 import com.imFarhad.inventoryorders.app.AppController;
@@ -79,7 +82,12 @@ public class AssignedFragment extends Fragment {
             @Override
             public void showOrderDetails(Order order) { showDetails(order);}
             @Override
-            public void showOrderLocation(Order order) {}
+            public void showOrderLocation(Order order) {
+                Intent intent = new Intent(getActivity(), MapsActivity.class);
+                Log.w(TAG , "Selected Order Id : " + order.getOrder_id());
+                intent.putExtra(" ", String.valueOf(order.getOrder_id()));
+                startActivity(intent);
+            }
         };
         progressDialog = new ProgressDialog(getActivity());
 
@@ -142,7 +150,7 @@ public class AssignedFragment extends Fragment {
                     for(int j=0; j<details.length(); j++) {
 
                         OrderDetails order_Details = new OrderDetails();
-                        JSONObject jsonObject = details.getJSONObject(0);
+                        JSONObject jsonObject = details.getJSONObject(j);
                         order_Details.setId(jsonObject.getInt("id"));
                         order_Details.setProduct_id(jsonObject.getInt("product_id"));
                         order_Details.setOrder_id(jsonObject.getInt("order_id"));

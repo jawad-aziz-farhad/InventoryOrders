@@ -72,8 +72,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                 //viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.yellow));
             }
             else if(order.getStatus() == 3){
-                //viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.green));
-                viewHolder.overFlow.setVisibility(View.GONE);
+                viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.green));
+                viewHolder.overFlow.setVisibility(View.INVISIBLE);
             }
         }
 
@@ -83,9 +83,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                 //viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.yellow));
             }
 
-            if(order.getStatus() == 3 || order.getStatus() == 5){
-                //viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.green));
-                viewHolder.overFlow.setVisibility(View.GONE);
+            if(order.getStatus() == 3){
+                viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.green));
+                viewHolder.overFlow.setVisibility(View.INVISIBLE);
             }
         }
 
@@ -169,15 +169,18 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                 popupMenu.findItem(R.id.action_status_change).setTitle("Delivered");
         }
         else{
-
+            Log.w(TAG , "Order Id " +  order.getOrder_id()+ " has Status "+ order.getStatus());
             if (getOrder().getStatus() == 1)
                 popupMenu.findItem(R.id.action_location).setVisible(false);
             if (getOrder().getStatus() == 2) {
+                popupMenu.findItem(R.id.action_location).setVisible(true);
                 popupMenu.findItem(R.id.action_status_change).setVisible(true);
                 popupMenu.findItem(R.id.action_status_change).setTitle("Received");
             }
-            else
+            else {
                 popupMenu.findItem(R.id.action_status_change).setVisible(false);
+                popupMenu.findItem(R.id.action_location).setVisible(false);
+            }
         }
 
     }

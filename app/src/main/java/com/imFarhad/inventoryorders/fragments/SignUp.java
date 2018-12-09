@@ -16,8 +16,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,7 +41,6 @@ import java.util.Map;
 
 public class SignUp extends Fragment {
 
-
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mFirstNameView;
@@ -55,8 +52,6 @@ public class SignUp extends Fragment {
     private SessionManager sessionManager;
     private static final String TAG = LoginActivity.class.getSimpleName();
     private ProgressDialog progressDialog;
-    private RadioGroup mUserTypeGroup;
-    private String userType = "shopkeeper";
     private static final int IMAGE_PICKER_CODE = 100;
 
     @Nullable
@@ -69,9 +64,8 @@ public class SignUp extends Fragment {
         progressDialog = new ProgressDialog(getActivity());
 
         mErrorView     = (TextView)view.findViewById(R.id.errorView);
-        mUserTypeGroup = (RadioGroup)view.findViewById(R.id.login_userType);
-        mFirstNameView      = (EditText)view.findViewById(R.id.first_name);
-        mLastNameView      = (EditText)view.findViewById(R.id.last_name);
+        mFirstNameView = (EditText)view.findViewById(R.id.first_name);
+        mLastNameView  = (EditText)view.findViewById(R.id.last_name);
         mEmailView     = (AutoCompleteTextView)view. findViewById(R.id.email);
         mPasswordView  = (EditText)view. findViewById(R.id.password);
         mImageView     = (ImageView)view.findViewById(R.id.signUpImage);
@@ -90,15 +84,6 @@ public class SignUp extends Fragment {
                 attemptSignUp();
             }
         });
-        mUserTypeGroup = (RadioGroup)view.findViewById(R.id.userType);
-        mUserTypeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-                RadioButton checkedRadioButton = (RadioButton)radioGroup.findViewById(checkedId);
-                userType = checkedRadioButton.getText().toString();
-            }
-        });
-
         return view;
     }
 
@@ -130,15 +115,8 @@ public class SignUp extends Fragment {
         String last_name   = mLastNameView.getText().toString();
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
-        if(userType.toLowerCase().equals("saleman")) {
-            params.put("firstName", first_name);
-            params.put("lastName", last_name);
-            params.put("phone", "0123456");
-            params.put("image", "");
-        }
-        else
-            params.put("name", first_name + " " + last_name);
 
+        params.put("name", first_name + " " + last_name);
         params.put("email", email);
         params.put("password", password);
 
@@ -183,7 +161,8 @@ public class SignUp extends Fragment {
                 }, 3000);
             }
         };
-        String SignUpUrl = userType.toLowerCase().equals("shopkeeper") ? AppConfig.SIGNUP_URL : AppConfig.SALEMAN_SIGNUP_URL;
+
+        String SignUpUrl = AppConfig.SIGNUP_URL;
         VolleyService volleyService = new VolleyService(iResult , getActivity());
         volleyService.postRequest(SignUpUrl, "POST" , new JSONObject(params));
 

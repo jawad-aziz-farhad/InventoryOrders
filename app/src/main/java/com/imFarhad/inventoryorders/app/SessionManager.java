@@ -100,6 +100,7 @@ public class SessionManager {
         editor.remove(TOKEN);
         editor.remove(NAME);
         editor.remove(EMAIL);
+        editor.remove(PROFILE_IMAGE);
         editor.apply();
 
     }

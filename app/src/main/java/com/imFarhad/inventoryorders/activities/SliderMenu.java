@@ -68,11 +68,12 @@ public class SliderMenu extends AppCompatActivity {
 
         /* SETTING UP HEADER VALUES */
         ImageView userImage = (ImageView)view.findViewById(R.id.user_image);
-        TextView userName  = (TextView)view.findViewById(R.id.userName);
-        TextView userEmail = (TextView)view.findViewById(R.id.userEmail);
+        TextView userName   = (TextView)view.findViewById(R.id.userName);
+        TextView userEmail  = (TextView)view.findViewById(R.id.userEmail);
 
         userName.setText(sessionManager.getName());
         userEmail.setText(sessionManager.getEmail());
+
         if(sessionManager.getImage() != null){
             String base64Image = sessionManager.getImage().split(",")[1];
             byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
@@ -168,7 +169,7 @@ public class SliderMenu extends AppCompatActivity {
         // Highlight the selected item has been done by NavigationView
         menuItem.setChecked(true);
         // Set action bar title
-        setTitle(menuItem.getTitle());
+        //setTitle(menuItem.getTitle());
         // Close the navigation drawer
         drawer.closeDrawers();
 
@@ -178,7 +179,12 @@ public class SliderMenu extends AppCompatActivity {
     private void logOut(MenuItem menuItem){
         menuItem.setChecked(true);
         drawer.closeDrawers();
+
         new SessionManager(this).clearLogin();
-        startActivity(new Intent(this, LoginActivity.class));
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        finishAffinity();
+        startActivity(intent);
     }
 }

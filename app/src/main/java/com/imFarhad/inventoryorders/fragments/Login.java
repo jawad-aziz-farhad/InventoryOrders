@@ -62,10 +62,14 @@ public class Login extends Fragment {
         //TODO: Set up the login form.
         sessionManager = new SessionManager(getActivity());
         progressDialog = new ProgressDialog(getActivity());
+
         mErrorView = (TextView)view.findViewById(R.id.loginError);
+
         mEmailView = (AutoCompleteTextView)view. findViewById(R.id.email);
         mPasswordView = (EditText)view. findViewById(R.id.password);
         mUserTypeGroup = (RadioGroup)view.findViewById(R.id.login_userType);
+
+
         Button mEmailSignInButton = (Button)view. findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +99,7 @@ public class Login extends Fragment {
 
     //TODO: CHECKING FOR INTERNET CONNECTION
     private void isInternetAvailable() {
+
         if(Connectivity.isConnected(getActivity()) && (Connectivity.isConnectedMobile(getActivity()) || Connectivity.isConnectedWifi(getActivity())))
             login();
         else
@@ -104,7 +109,9 @@ public class Login extends Fragment {
     //TODO: LOGGIN IN TO THE APP
     public void login() {
         showDialog();
+
         Map<String, String> params = new HashMap<String, String>();
+
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
         params.put("email", email);
@@ -148,6 +155,7 @@ public class Login extends Fragment {
 
         String LoginUrl = userType.toLowerCase().equals("saleman") ? AppConfig.SALEMAN_LOGIN_URL : AppConfig.LOGIN_URL;
         Log.w(TAG, LoginUrl);
+
         VolleyService volleyService = new VolleyService(iResult , getActivity());
         volleyService.postRequest(LoginUrl, "POST" , new JSONObject(params));
     }

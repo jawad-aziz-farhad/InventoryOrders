@@ -127,6 +127,7 @@ public class CategoriesFragment extends Fragment {
                 Toast.makeText(getActivity(), getString(R.string.error_message), Toast.LENGTH_SHORT).show();
             }
         };
+
         VolleyService volleyService = new VolleyService(iResult, getActivity());
         volleyService.getRequest(AppConfig.CATEGORIES_URL, "GET" , null);
     }

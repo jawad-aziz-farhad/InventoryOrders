@@ -16,8 +16,8 @@ public class AppConfig {
     public static final String ORDERS_URL = SERVER_URL + "order/user/orders/";
     public static final String SALEMAN_ORDERS_URL = SERVER_URL + "order/saleman/single/";
     public static final String ORDER_STATUS_URL = SERVER_URL + "order/saleman/accepted";
-    public static final String PUBNUB_PUBLISHKEY = "pub-c-f86699fe-3463-4dc7-a4a6-766de441b451";
-    public static final String PUBNUB_SUBSCRIBE_KEY = "sub-c-5dcd8e30-c78c-11e8-8f2a-6ea01b4be699";
+    public static final String PUBNUB_PUBLISHKEY = "pub-c-bba04e75-4000-4c48-9fe3-c83973eb95cb";
+    public static final String PUBNUB_SUBSCRIBE_KEY = "sub-c-56dc6b00-fac2-11e8-b809-8ee1f208b3b7";
     public static final String PUBNUB_CHANNEL_NAME = "TrackLocation";
     public static final String STRIPE_KEY = "pk_test_XpE228pCSBMrfoZmC5601SlQ";
 }

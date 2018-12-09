@@ -64,11 +64,12 @@ public class ShowLocation extends AppCompatActivity implements OnMapReadyCallbac
         if(getIntent().getExtras() != null)
             CHANNEL_NAME = getIntent().getExtras().getString("OrderId");
 
+        initPubNub();
+
         Log.w(TAG, "Order ID "+ CHANNEL_NAME);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             checkPermissions();
-        else
-            initPubNub();
+
     }
 
     //TODO: CHECKING PERMISSION
@@ -136,7 +137,7 @@ public class ShowLocation extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         pubNub.subscribe()
-              .channels(Arrays.asList(CHANNEL_NAME != null ?  (AppConfig.PUBNUB_CHANNEL_NAME + CHANNEL_NAME ) : AppConfig.PUBNUB_CHANNEL_NAME))
+              .channels(Arrays.asList(AppConfig.PUBNUB_CHANNEL_NAME))
               .execute();
     }
 
@@ -221,6 +222,7 @@ public class ShowLocation extends AppCompatActivity implements OnMapReadyCallbac
         } catch (SecurityException e) {
             e.printStackTrace();
         }
+
         subscribeLocationChannel();
     }
 }

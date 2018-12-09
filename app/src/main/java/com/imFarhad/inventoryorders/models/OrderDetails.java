@@ -19,8 +19,6 @@ public class OrderDetails implements Parcelable {
 
     public OrderDetails() {}
 
-
-
     public OrderDetails(Parcel parcel){
         id = parcel.readInt();
         order_id = parcel.readInt();

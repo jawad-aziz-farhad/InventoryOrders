@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">InventoryOrders</string>
+    <string name="app_name">Ocsas</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

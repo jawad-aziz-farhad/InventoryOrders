@@ -5,6 +5,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,33 +29,46 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.imFarhad.inventoryorders.R;
 import com.imFarhad.inventoryorders.app.AppConfig;
+import com.imFarhad.inventoryorders.app.JsonUtil;
+import com.imFarhad.inventoryorders.app.SessionManager;
 import com.imFarhad.inventoryorders.interfaces.LatLngInterpolator;
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
+import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private PubNub pubNub;
-    private Marker marker;
+    private Marker marker , marker1;
     private  SupportMapFragment supportMapFragment;
     private FusedLocationProviderClient fusedLocationClient;
     private LocationRequest locationRequest;
     private static final int REQUEST_CODE = 100;
     private static final String TAG = LocationTracking.class.getSimpleName();
     private String CHANNEL_NAME = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +84,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             CHANNEL_NAME = getIntent().getExtras().getString("OrderId");
         }
 
+        Log.w(TAG, "Channel Name "+ CHANNEL_NAME);
         initLocationAPIs();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
@@ -107,7 +124,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     initPubNub();
                 } else
                     Toast.makeText(this, "Permissions not granted.", Toast.LENGTH_LONG).show();
-
             }
         }
     }
@@ -118,7 +134,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationRequest = LocationRequest.create();
         locationRequest.setInterval(5000); // 5 second delay between each request
         locationRequest.setFastestInterval(5000); // 5 seconds fastest time in between each request
-        locationRequest.setSmallestDisplacement(10); // 10 meters minimum displacement for new location request
+        //locationRequest.setSmallestDisplacement(10); // 10 meters minimum displacement for new location request
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY); // enables GPS high accuracy location requests
 
     }
@@ -133,10 +149,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Location location = locationResult.getLastLocation();
                     LinkedHashMap<String, String> message = getNewLocationMessage(location.getLatitude(), location.getLongitude());
                     updateUI(message);
-
+                    String Channel_Name = CHANNEL_NAME != null ?  ( AppConfig.PUBNUB_CHANNEL_NAME + CHANNEL_NAME ) : AppConfig.PUBNUB_CHANNEL_NAME;
                     pubNub.publish()
                           .message(message)
-                          .channel(CHANNEL_NAME != null ? ( AppConfig.PUBNUB_CHANNEL_NAME + CHANNEL_NAME ) : AppConfig.PUBNUB_CHANNEL_NAME)
+                          .channel(Channel_Name)
                           .async(new PNCallback<PNPublishResult>() {
                               @Override
                               public void onResponse(PNPublishResult result, PNStatus status) {
@@ -151,6 +167,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         catch (SecurityException e){e.printStackTrace();}
     }
+
+    //TODO: LISTENING TO UPDATED LOCATION BY SUBSCRIBING CHANNEL
+    private void subscribeLocationChannel() {
+        pubNub.addListener(new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+
+            }
+
+            @Override
+            public void message(PubNub pubnub, final PNMessageResult message) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Map<String, String> newLocatin = JsonUtil.fromJson(message.getMessage().toString(), LinkedHashMap.class);
+                            updateUI(newLocatin);
+                        }
+                        catch (Exception e){ e.printStackTrace(); }
+                    }
+                });
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+
+            }
+        });
+        String Channel_Name = CHANNEL_NAME != null ? AppConfig.PUBNUB_CHANNEL_NAME + CHANNEL_NAME : AppConfig.PUBNUB_CHANNEL_NAME;
+        pubNub.subscribe()
+                .channels(Arrays.asList(Channel_Name))
+                .execute();
+    }
+
 
     //TODO: PUTTING LATITUDE AND LONGITUDE IN HASH MAP OBJECT TO PUBLISH FOR PUBNUB CHANNEL
     private LinkedHashMap<String, String> getNewLocationMessage(double lat, double lng){
@@ -171,13 +221,47 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         else {
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(newLocation, 15.5f));
-            marker = mMap.addMarker(new MarkerOptions().position(newLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.car)));
+            LatLng endLatLng = new LatLng(Double.valueOf("33.7681428") , Double.valueOf("72.7732922"));
+            marker = mMap.addMarker(new MarkerOptions().position(newLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.car)).title(getAddress(newLocation).get(0).getAddressLine(0)));
+            mMap.addMarker(new MarkerOptions().position(endLatLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).title(getAddress(endLatLng).get(0).getAddressLine(0)));
+
+            DrawLine(newLocation, endLatLng);
         }
-
-
     }
 
-    //TODO: ANIMATING ICON ACCORING TO THE LOCATION
+
+    //TODO: GET ADDRESS
+    private List<Address> getAddress(LatLng latLng) {
+        Geocoder geocoder;
+        List<Address> addresses = new ArrayList<>();
+        geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+
+        }catch (IOException e){ e.printStackTrace(); }
+
+        String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+//        String city = addresses.get(0).getLocality();
+//        String state = addresses.get(0).getAdminArea();
+//        String country = addresses.get(0).getCountryName();
+//        String postalCode = addresses.get(0).getPostalCode();
+//        String knownName = addresses.get(0).getFeatureName();
+        Log.w(TAG, "Address is : " +address);
+        return addresses;
+    }
+
+    //TODO: DRAWING POLYLINE
+    public  void DrawLine(LatLng location, LatLng endLocation) {
+        PolylineOptions polylineOptions = new PolylineOptions();
+        polylineOptions.add(location)
+                .color(R.color.green)
+                .add(new LatLng(location.latitude, location.longitude))
+                .add(new LatLng(endLocation.latitude, endLocation.longitude));
+
+        mMap.addPolyline(polylineOptions);
+    }
+
+        //TODO: ANIMATING ICON ACCORING TO THE LOCATION
     private void animateIcon(final LatLng location) {
         final LatLng startPosition = marker.getPosition();
         final LatLng endPosition   = new LatLng(location.latitude, location.longitude);
@@ -190,9 +274,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float v = valueAnimator.getAnimatedFraction();
-                LatLng newPosition = latLngInterpolator.interpolate(v, startPosition, endPosition);
-                marker.setPosition(newPosition);
+            float v = valueAnimator.getAnimatedFraction();
+            LatLng newPosition = latLngInterpolator.interpolate(v, startPosition, endPosition);
+            marker.setPosition(newPosition);
             }
         });
 
@@ -207,10 +291,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-//        mMap = googleMap;
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         try {
             mMap = googleMap;
             mMap.setMyLocationEnabled(true);
@@ -218,7 +298,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             e.printStackTrace();
         }
 
-        publishNewLocation();
+        if(new SessionManager(this).getType().equals("saleman"))
+            publishNewLocation();
+        else
+            subscribeLocationChannel();
     }
 
     @Override
