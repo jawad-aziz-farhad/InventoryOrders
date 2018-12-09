@@ -13,6 +13,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.imFarhad.inventoryorders.app.AppConfig;
+import com.imFarhad.inventoryorders.app.ProxyHurlStack;
 import com.imFarhad.inventoryorders.app.SessionManager;
 import com.imFarhad.inventoryorders.interfaces.IResult;
 import com.imFarhad.inventoryorders.interfaces._IResult;
@@ -81,6 +82,7 @@ public class VolleyService {
         };
         // add it to the RequestQueue
         RequestQueue requestQueue = Volley.newRequestQueue(context);
+        //RequestQueue requestQueue = Volley.newRequestQueue(context, new ProxyHurlStack());
         requestQueue.add(jsonObjReq);
     }
 

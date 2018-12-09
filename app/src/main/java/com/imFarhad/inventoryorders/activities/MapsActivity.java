@@ -229,7 +229,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-
     //TODO: GET ADDRESS
     private List<Address> getAddress(LatLng latLng) {
         Geocoder geocoder;
